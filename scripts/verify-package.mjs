@@ -1,3 +1,4 @@
+import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdir, readFile, rm, mkdtemp, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
@@ -30,13 +31,19 @@ try {
   );
   const site = join(dir, "site.json");
   await writeFile(site, await readFile("examples/site/site.json"));
-  const bin = join(dir, "node_modules/@avgeek-oss/docs/bin/oss-docs.mjs");
+  const bin = join(dir, "node_modules/.bin/oss-docs");
   for (const command of ["sync", "check"])
     execFileSync(
       process.execPath,
       [bin, command, "--config", site, "--dir", dir],
       { stdio: "inherit" },
     );
+  const generated = JSON.parse(await readFile(join(dir, "docs.json"), "utf8"));
+  assert.equal(generated.name, "Example");
+  const manifest = JSON.parse(
+    await readFile(join(dir, ".oss-docs.json"), "utf8"),
+  );
+  assert.equal(Object.keys(manifest.files).length, 5);
   console.log(
     "Verified packed package from a fresh consumer outside this checkout.",
   );

@@ -29,17 +29,20 @@
       const theme = header.querySelector("#theme-preference-menu-trigger");
       const primary = header.querySelector("#topbar-cta-button a");
       const actions = theme?.parentElement?.parentElement;
+      const internal = primary?.getAttribute("href")?.startsWith("/");
+      const target = internal ? null : primary?.getAttribute("target");
       if (theme && primary && actions) {
         const existing = actions.querySelector("[data-oss-primary]");
         if (
           !existing ||
           existing.getAttribute("href") !== primary.getAttribute("href") ||
           existing.textContent !== primary.textContent ||
-          existing.getAttribute("target") !== primary.getAttribute("target") ||
+          existing.getAttribute("target") !== target ||
           existing.getAttribute("rel") !== primary.getAttribute("rel")
         ) {
           const cta = primary.cloneNode(true);
           cta.dataset.ossPrimary = "";
+          if (internal) cta.removeAttribute("target");
           if (existing) existing.replaceWith(cta);
           else actions.append(cta);
         }

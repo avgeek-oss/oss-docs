@@ -25,7 +25,7 @@ Use `navigation.dropdowns` for main documentation categories. Each category cont
 
 Do not replace category navigation with a custom React router or copied sidebar. Mintlify owns search, mobile navigation, selected page state, and keyboard behavior. Product repositories choose the category labels and order from their actual tasks; the kit does not impose Towbar-specific categories.
 
-Define `navbar.primary` for the header CTA and `footer.links` for the footer groups. The header bridge adds the product wordmark and retains the native CTA beside the appearance control. It preserves the link's target and rel; native search and theme controls remain intact. The shared footer stays visible on custom homepages.
+Define `navbar.primary` for the header CTA and `footer.links` for the footer groups. The header bridge adds the product wordmark and retains the native CTA beside the appearance control. Internal documentation opens in the same tab; external targets and link rel are preserved. native search and theme controls remain intact. The shared footer stays visible on custom homepages.
 
 The generator writes exactly: `docs.json`, `oss-docs.css`, `oss-docs.js`, `snippets/oss/homepage.jsx`, `snippets/oss/screenshot.jsx`, and `.oss-docs.json`. The manifest records package version and generated file hashes. Commit every generated file so hosted Mintlify does not require npm installation.
 

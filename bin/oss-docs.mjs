@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, realpath } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
@@ -93,7 +93,7 @@ export async function syncSite({ config, dir, check = false }) {
 
 if (
   process.argv[1] &&
-  resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+  (await realpath(resolve(process.argv[1]))) === fileURLToPath(import.meta.url)
 ) {
   const [command, ...args] = process.argv.slice(2);
   const option = (name) => args[args.indexOf(name) + 1];

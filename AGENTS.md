@@ -17,7 +17,7 @@ Use readable ESM, explicit public types, named functions for Node operations, an
 
 ESLint enforces unused variables, undefined names, equality, unreachable code, and empty blocks. Stylelint checks invalid colors/properties/selectors, duplicate declarations, and empty rules. Prettier owns formatting. Semantic CSS variables use the oss namespace; product primary colors come from configuration. Scope homepage rules under oss-home and keep document styles separate. Do not target unstable generated class hashes; document any Mintlify DOM bridge and verify native controls still work.
 
-Custom header JavaScript must be idempotent, clean up observers and scheduled frames on reload, and preserve the CTA destination, target, and rel. Keep search and theme controls native. Browser code must not read credentials, add tracking, or persist unrelated user state.
+Custom header JavaScript must be idempotent, clean up observers and scheduled frames on reload, and preserve the CTA destination and rel, opening internal documentation in the same tab and retaining external targets. Keep search and theme controls native. Browser code must not read credentials, add tracking, or persist unrelated user state.
 
 ## Verification and releases
 

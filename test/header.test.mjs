@@ -47,6 +47,10 @@ test("header preserves native controls and destination semantics across rerender
     const native = window.document.querySelector("#topbar-cta-button a");
     native.href = "/new-guide";
     await tick();
+    assert.equal(
+      window.document.querySelector("[data-oss-primary]").target,
+      "",
+    );
     // A native rerender creates a child-list mutation, as Mintlify navigation does.
     native.append(window.document.createTextNode(" now"));
     await tick();
