@@ -9,7 +9,7 @@ Mintlify custom components cannot import external npm packages. This kit install
 Use Node.js 24 and pnpm 11. For GitHub Packages, configure the `@avgeek-oss` scope for `https://npm.pkg.github.com` and supply credentials through your environment. Do not commit tokens. Before a registry release, install an immutable Git commit:
 
 ```bash
-pnpm add -Dw @avgeek-oss/docs github:avgeek-oss/oss-docs#<full-commit-sha>
+pnpm add -Dw "@avgeek-oss/docs@github:avgeek-oss/oss-docs#<full-commit-sha>"
 ```
 
 Create a product-owned `docs/site.json`. Use [the runnable example](examples/site/site.json) for the required brand, navigation, header CTA, and footer fields. All additional native Mintlify options are preserved.
