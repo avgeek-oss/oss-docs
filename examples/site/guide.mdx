@@ -1,0 +1,38 @@
+---
+title: "Get started"
+description: "A task-oriented documentation example."
+---
+
+import { Screenshot } from "/snippets/oss/screenshot.jsx";
+
+## Browse by task
+
+<CardGroup cols={2}>
+  <Card title="Introduction" icon="book-open" href="/guide">
+    Start with the product model and a working example.
+  </Card>
+  <Card title="Reference" icon="square-terminal" href="/reference">
+    Look up the exact configuration contract.
+  </Card>
+</CardGroup>
+
+## Complete a workflow
+
+<Steps>
+  <Step title="Prepare">State prerequisites before the first command.</Step>
+  <Step title="Configure">Use a working example with safe sample values.</Step>
+  <Step title="Verify">Describe the visible result and the recovery path.</Step>
+</Steps>
+
+<Screenshot
+  light="/screen.svg"
+  alt="Example workflow layout"
+  width={1200}
+  height={700}
+  caption="Show the result next to the task it explains."
+/>
+
+<Note>
+  Use native Mintlify components for prose; shared snippets own repeated custom
+  layouts.
+</Note>

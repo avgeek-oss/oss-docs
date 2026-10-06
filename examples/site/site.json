@@ -1,0 +1,54 @@
+{
+  "name": "Example",
+  "description": "A sample project for the shared documentation kit.",
+  "logo": {
+    "light": "/logo.svg",
+    "dark": "/logo.svg",
+    "href": "/"
+  },
+  "favicon": "/logo.svg",
+  "colors": {
+    "primary": "#A16207",
+    "light": "#B08505",
+    "dark": "#B9872C"
+  },
+  "navigation": {
+    "dropdowns": [
+      {
+        "dropdown": "Introduction",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Get started",
+            "pages": ["guide", "reference"]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Docs",
+      "href": "/guide"
+    }
+  },
+  "footer": {
+    "links": [
+      {
+        "header": "Documentation",
+        "items": [
+          {
+            "label": "Get started",
+            "href": "/guide"
+          },
+          {
+            "label": "Reference",
+            "href": "/reference"
+          }
+        ]
+      }
+    ]
+  },
+  "redirects": []
+}

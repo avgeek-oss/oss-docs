@@ -1,0 +1,109 @@
+---
+title: "Example project"
+description: "Shared homepage components with product-owned content."
+mode: "custom"
+---
+
+import {
+  Home,
+  Hero,
+  Actions,
+  ActionLink,
+  ProductFrame,
+  Highlights,
+  Process,
+  SectionIntro,
+  Eyebrow,
+  FeatureGroup,
+  Feature,
+  FeatureCopy,
+  FeatureImage,
+  InlineLink,
+} from "/snippets/oss/homepage.jsx";
+import { ThemeImage } from "/snippets/oss/screenshot.jsx";
+
+<Home>
+  <Hero id="hero-heading">
+    <h1 id="hero-heading">
+      Your project.
+      <br />
+      <span>A clear starting point.</span>
+    </h1>
+    <p className="oss-lead">
+      Product-owned content, shared documentation structure.
+    </p>
+    <Actions>
+      <ActionLink href="/guide">Get started →</ActionLink>
+      <ActionLink variant="secondary" href="/reference">
+        Reference →
+      </ActionLink>
+    </Actions>
+  </Hero>
+  <ProductFrame>
+    <ThemeImage
+      light="/screen.svg"
+      alt="Example application layout"
+      width={1200}
+      height={700}
+      priority
+    />
+  </ProductFrame>
+  <Highlights aria-label="Capabilities">
+    <div>
+      <h2>Understand the product</h2>
+      <p>Start with the model and a working example.</p>
+      <InlineLink href="/guide">Read the guide →</InlineLink>
+    </div>
+    <div>
+      <h2>Operate with confidence</h2>
+      <p>Document prerequisites, outcomes, and recovery.</p>
+      <InlineLink href="/guide">See the workflow →</InlineLink>
+    </div>
+    <div>
+      <h2>Automate safely</h2>
+      <p>Keep API references generated from contracts.</p>
+      <InlineLink href="/reference">Browse the reference →</InlineLink>
+    </div>
+  </Highlights>
+  <Process id="process-heading">
+    <SectionIntro>
+      <Eyebrow>How it works</Eyebrow>
+      <h2 id="process-heading">From setup to useful work.</h2>
+    </SectionIntro>
+    <ol>
+      <li>
+        <span>01</span>
+        <h3>Install</h3>
+        <p>Follow the verified prerequisites.</p>
+      </li>
+      <li>
+        <span>02</span>
+        <h3>Configure</h3>
+        <p>Choose the settings for your environment.</p>
+      </li>
+      <li>
+        <span>03</span>
+        <h3>Verify</h3>
+        <p>Confirm the expected result.</p>
+      </li>
+    </ol>
+  </Process>
+  <FeatureGroup>
+    <Feature id="feature-heading">
+      <FeatureCopy>
+        <Eyebrow>Workflows</Eyebrow>
+        <h2 id="feature-heading">Explain the next action.</h2>
+        <p>Each product provides its own screenshot, copy, and destination.</p>
+        <InlineLink href="/guide">Explore the workflow →</InlineLink>
+      </FeatureCopy>
+      <FeatureImage>
+        <ThemeImage
+          light="/screen.svg"
+          alt="Example workflow layout"
+          width={1200}
+          height={700}
+        />
+      </FeatureImage>
+    </Feature>
+  </FeatureGroup>
+</Home>
