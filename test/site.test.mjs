@@ -52,6 +52,8 @@ test("generated files survive packaging, detect drift and leave app content inta
     await writeFile(join(dir, "guide.mdx"), "Product-owned content");
     await syncSite({ config, dir });
     await syncSite({ config, dir, check: true });
+    const goldCss = await readFile(join(dir, "oss-docs.css"), "utf8");
+    assert.match(goldCss, /--oss-on-primary: #ffffff/u);
     const header = await readFile(join(dir, "oss-docs.js"), "utf8");
     assert(header.includes(JSON.stringify(input.name)));
     const manifest = JSON.parse(
@@ -69,6 +71,17 @@ test("generated files survive packaging, detect drift and leave app content inta
     );
     await syncSite({ config, dir });
     await syncSite({ config, dir, check: true });
+    await writeFile(
+      config,
+      JSON.stringify({
+        ...input,
+        colors: { primary: "#F2CD51", light: "#77520A", dark: "#E0B84A" },
+      }),
+    );
+    await syncSite({ config, dir });
+    const brightCss = await readFile(join(dir, "oss-docs.css"), "utf8");
+    assert.match(brightCss, /--oss-on-primary: #171717/u);
+    assert.match(brightCss, /--oss-heading-accent: #77520a/u);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
