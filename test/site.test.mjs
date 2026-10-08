@@ -39,6 +39,7 @@ test("site defaults preserve product-owned data without mutating input", () => {
   assert.equal(config.theme, "mint");
   assert.equal(config.interaction.drilldown, false);
   assert.deepEqual(config.navigation, original.navigation);
+  assert.deepEqual(config.colors, original.colors);
   config.footer.links[0].items[0].label = "Changed";
   assert.deepEqual(input, original);
   assert.throws(() => defineSite({ ...input, navbar: {} }), /CTA/);
@@ -53,7 +54,7 @@ test("generated files survive packaging, detect drift and leave app content inta
     await syncSite({ config, dir });
     await syncSite({ config, dir, check: true });
     const goldCss = await readFile(join(dir, "oss-docs.css"), "utf8");
-    assert.match(goldCss, /--oss-on-primary: #ffffff/u);
+    assert.match(goldCss, /--oss-primary: #a16207/u);
     const header = await readFile(join(dir, "oss-docs.js"), "utf8");
     assert(header.includes(JSON.stringify(input.name)));
     const manifest = JSON.parse(
@@ -75,14 +76,37 @@ test("generated files survive packaging, detect drift and leave app content inta
       config,
       JSON.stringify({
         ...input,
-        colors: { primary: "#F2CD51", light: "#77520A", dark: "#E0B84A" },
+        colors: { primary: "#77520A", light: "#E0B84A", dark: "#77520A" },
       }),
     );
     await syncSite({ config, dir });
     const brightCss = await readFile(join(dir, "oss-docs.css"), "utf8");
-    assert.match(brightCss, /--oss-on-primary: #171717/u);
+    assert.match(brightCss, /--oss-primary: #77520a/u);
     assert.match(brightCss, /--oss-heading-accent: #77520a/u);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+test("SEO retains per-page metadata defaults and validates the canonical origin", () => {
+  const config = defineSite({
+    ...input,
+    seo: {
+      metatags: {
+        canonical: "https://docs.example.test",
+        "og:site_name": "Product",
+      },
+    },
+  });
+  assert.equal(config.seo.indexing, "all");
+  assert.equal(config.seo.metatags["twitter:card"], "summary_large_image");
+  assert.equal(config.seo.metatags["og:site_name"], "Product");
+  assert.throws(
+    () =>
+      defineSite({
+        ...input,
+        seo: { metatags: { canonical: "https://docs.example.test/guide" } },
+      }),
+    /origin/,
+  );
 });

@@ -86,46 +86,6 @@
   align-items: center;
   gap: 12px;
 }
-.oss-home .oss-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 0 16px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 500;
-  background: var(--oss-primary);
-  color: var(--oss-on-primary);
-  border: 1px solid var(--oss-primary);
-}
-.oss-home .oss-button:hover {
-  background: var(--oss-primary-hover);
-}
-.oss-home .oss-button:active {
-  transform: translateY(1px);
-}
-.oss-home .oss-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 36px;
-  padding: 0 16px;
-  gap: 8px;
-  border: 1px solid var(--oss-line);
-  border-radius: 999px;
-  background: var(--oss-panel);
-  color: var(--oss-ink);
-  font-size: 14px;
-  font-weight: 500;
-}
-.oss-home .oss-secondary:hover {
-  background: var(--oss-line);
-}
-.oss-home .oss-secondary:active {
-  transform: translateY(1px);
-}
 .oss-link:hover {
   text-decoration: underline;
   text-underline-offset: 5px;
@@ -409,9 +369,28 @@ body:has(.oss-home) {
 [data-oss-primary] {
   flex-shrink: 0;
   white-space: nowrap;
-  background: var(--oss-primary);
+}
+
+/* Color the native CTA's background and foreground slots, including hero actions. */
+#topbar-cta-button a > span,
+[data-oss-primary] > span,
+[data-oss-action] > span {
+  background-color: var(--oss-primary);
+}
+#topbar-cta-button a > div,
+#topbar-cta-button a > div > *,
+[data-oss-primary] > div,
+[data-oss-primary] > div > *,
+[data-oss-action] > div,
+[data-oss-action] > div > * {
   color: var(--oss-on-primary);
-  border-radius: 999px;
+}
+[data-oss-action="secondary"] > span {
+  background-color: var(--oss-panel);
+  border: 1px solid var(--oss-line);
+}
+[data-oss-action="secondary"] > div > * {
+  color: var(--oss-ink);
 }
 
 /* Feature screenshots share theme behavior with the homepage. */

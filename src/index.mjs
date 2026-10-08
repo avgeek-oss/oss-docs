@@ -6,6 +6,10 @@ export const siteDefaults = Object.freeze({
   styling: { eyebrows: "breadcrumbs", codeblocks: "system" },
   interaction: { drilldown: false },
   contextual: { options: ["copy", "view", "chatgpt", "claude"] },
+  seo: {
+    indexing: "all",
+    metatags: { "og:type": "website", "twitter:card": "summary_large_image" },
+  },
 });
 
 export function defineSite(input) {
@@ -16,7 +20,24 @@ export function defineSite(input) {
   if (!input.navbar?.primary?.href || !input.footer?.links?.length)
     throw new Error("Define the header CTA and footer link groups");
   validateNavigation(input.navigation);
-  return { ...structuredClone(siteDefaults), ...structuredClone(input) };
+  const config = {
+    ...structuredClone(siteDefaults),
+    ...structuredClone(input),
+  };
+  config.seo = {
+    ...structuredClone(siteDefaults.seo),
+    ...structuredClone(input.seo ?? {}),
+    metatags: { ...siteDefaults.seo.metatags, ...input.seo?.metatags },
+  };
+  const canonical = config.seo.metatags.canonical;
+  if (canonical) {
+    const url = new URL(canonical);
+    if (url.protocol !== "https:" || url.origin !== canonical)
+      throw new Error(
+        "Canonical must be an exact HTTPS origin; Mintlify appends page paths",
+      );
+  }
+  return config;
 }
 
 export function validateNavigation(navigation) {

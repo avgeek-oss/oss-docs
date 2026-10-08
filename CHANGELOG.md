@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Use native Mintlify CTA markup for homepage actions and one readable accent across header buttons, hero text and links in each theme.
+- Add shared SEO defaults while preserving page-specific metadata and canonical URL paths.
+
 ## 0.1.1
 
 - Match homepage actions to product button sizing and derive readable button text from each brand color.
