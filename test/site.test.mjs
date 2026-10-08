@@ -53,7 +53,7 @@ test("generated files survive packaging, detect drift and leave app content inta
     await syncSite({ config, dir });
     await syncSite({ config, dir, check: true });
     const goldCss = await readFile(join(dir, "oss-docs.css"), "utf8");
-    assert.match(goldCss, /--oss-primary: #b08505/u);
+    assert.match(goldCss, /--oss-primary: #a16207/u);
     const header = await readFile(join(dir, "oss-docs.js"), "utf8");
     assert(header.includes(JSON.stringify(input.name)));
     const manifest = JSON.parse(
