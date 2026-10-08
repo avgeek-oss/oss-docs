@@ -8,7 +8,7 @@ Use `Home` once for a custom homepage. Use `Hero` for its heading and lead copy.
 
 | Component      | Use and composition                                                                                     |
 | -------------- | ------------------------------------------------------------------------------------------------------- |
-| Home           | Root layout, maximum 1200px, responsive side padding.                                                   |
+| Home           | Root layout, maximum 1200px, responsive side padding and clearance before the footer.                   |
 | Hero           | Centered heading, lead copy and Actions.                                                                |
 | Actions        | Wrapping action row; contains ActionLink.                                                               |
 | ActionLink     | Navigation action; primary by default, secondary for an auxiliary destination. No other variant exists. |
@@ -66,3 +66,5 @@ Use `Screenshot` inside a documentation guide. It has the same image props excep
 ```
 
 Do not omit intrinsic dimensions or reuse a light screenshot for dark mode when the app offers a dark version. Meaningful alt text describes the task result; captions explain what readers should notice. Keep screenshots in the product repo, captured from reproducible sample data without real credentials or private data.
+
+Capture lossless PNGs from the rendered app at a device scale factor that covers the largest intended display, rather than enlarging an existing screenshot. Check the browser's `currentSrc`, natural width, rendered width and device pixel ratio on the hosted site. For detailed dashboard text, a 4× capture gives headroom for Retina displays and zoom. Keep direct image sources in ThemeImage to avoid introducing a second lossy encoding step.

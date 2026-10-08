@@ -9,7 +9,7 @@ const source = await readFile(
 
 test("header preserves native controls and destination semantics across rerenders", async () => {
   const dom = new JSDOM(
-    `<body><header id="navbar"><a href="/"><img class="nav-logo" alt="Example" /></a><div><div><button id="theme-preference-menu-trigger">Theme</button></div></div><div id="topbar-cta-button"><a href="https://example.test/docs" target="_blank" rel="noopener">Docs</a></div><button id="search-bar-entry">Search</button></header></body>`,
+    `<body><header id="navbar"><a href="/"><img class="nav-logo" alt="Example" /></a><div><div><button id="theme-preference-menu-trigger">Theme</button></div></div><div id="topbar-cta-button"><a href="https://example.test/docs" target="_blank" rel="noopener">Docs</a></div><button id="search-bar-entry">Search</button></header><footer id="footer"><a href="/"><img class="nav-logo" alt="Example" /></a></footer></body>`,
     { runScripts: "outside-only", pretendToBeVisual: true },
   );
   try {
@@ -43,6 +43,14 @@ test("header preserves native controls and destination semantics across rerender
     assert.equal(
       window.document.querySelectorAll("[data-oss-primary]").length,
       1,
+    );
+    assert.equal(
+      window.document.querySelectorAll("#footer [data-oss-wordmark]").length,
+      1,
+    );
+    assert.equal(
+      window.document.querySelector("#footer [data-oss-wordmark]").textContent,
+      "Example",
     );
     const native = window.document.querySelector("#topbar-cta-button a");
     native.href = "/new-guide";
