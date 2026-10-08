@@ -5,7 +5,6 @@
   --oss-line: oklch(0.91 0 0);
   --oss-panel: oklch(0.97 0 0);
   --oss-accent: var(--oss-primary);
-  --oss-heading-accent: var(--oss-primary);
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 32px;
@@ -18,7 +17,6 @@
   --oss-line: oklch(0.3 0 0);
   --oss-panel: oklch(0.2 0 0);
   --oss-accent: var(--oss-primary);
-  --oss-heading-accent: var(--oss-primary);
 }
 .oss-home h1,
 .oss-home h2,
@@ -92,12 +90,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  min-height: 38px;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
   background: var(--oss-primary);
   color: var(--oss-on-primary);
   border: 1px solid var(--oss-primary);
@@ -112,15 +110,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
-  padding: 8px 14px;
-  gap: 10px;
+  min-height: 36px;
+  padding: 0 16px;
+  gap: 8px;
   border: 1px solid var(--oss-line);
-  border-radius: 6px;
+  border-radius: 999px;
   background: var(--oss-panel);
   color: var(--oss-ink);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
 }
 .oss-home .oss-secondary:hover {
   background: var(--oss-line);
@@ -411,6 +409,9 @@ body:has(.oss-home) {
 [data-oss-primary] {
   flex-shrink: 0;
   white-space: nowrap;
+  background: var(--oss-primary);
+  color: var(--oss-on-primary);
+  border-radius: 999px;
 }
 
 /* Feature screenshots share theme behavior with the homepage. */

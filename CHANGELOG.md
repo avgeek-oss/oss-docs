@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Match homepage actions to product button sizing and derive readable button text from each brand color.
+- Use the configured light and dark colors for homepage heading accents independently of the primary action color.
+
 ## 0.1.0
 
 - Extract composable homepage layouts, themed screenshots and header behavior from Towbar.
