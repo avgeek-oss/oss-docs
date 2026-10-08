@@ -63,7 +63,7 @@ jobs:
           path: artifacts/
       - run: node scripts/check-release.mjs --candidate
       - name: Publish verified tarball
-        run: npm publish "artifacts/avgeek-oss-docs-${GITHUB_REF_NAME#v}.tgz" --ignore-scripts
+        run: npm publish "./artifacts/avgeek-oss-docs-${GITHUB_REF_NAME#v}.tgz" --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check registry integrity

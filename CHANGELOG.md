@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+- Publish the verified tarball with an explicit local path so npm does not interpret it as a GitHub repository.
+
 ## 0.1.2
 
 - Use native Mintlify CTA markup for homepage actions and one readable accent across header buttons, hero text and links in each theme.
