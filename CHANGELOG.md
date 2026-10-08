@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.5
+
+- Keep the native footer logo and social links together in one row at desktop widths.
+
+## 0.1.4
+
+- Show the native advanced footer on homepages, with a brand row, wrapping link columns, and space after homepage content.
+
 ## 0.1.3
 
 - Publish the verified tarball with an explicit local path so npm does not interpret it as a GitHub repository.

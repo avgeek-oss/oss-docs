@@ -361,7 +361,16 @@
 }
 #footer.advanced-footer > div > div:first-child > div:first-child {
   min-width: 0;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+#footer.advanced-footer > div > div:first-child > div:nth-child(3) {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: end;
 }
 #footer.advanced-footer > div > div:first-child > div:nth-child(2) {
   display: grid;
@@ -396,6 +405,11 @@
 #footer.advanced-footer a:focus-visible {
   outline: 2px solid var(--oss-primary);
   outline-offset: 4px;
+}
+@media (max-width: 767px) {
+  #footer.advanced-footer > div > div:first-child > div:first-child {
+    grid-column: 1 / -1;
+  }
 }
 @media (max-width: 640px) {
   #footer.advanced-footer > div {
