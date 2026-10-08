@@ -73,12 +73,8 @@
             "href": "https://www.vitalog.dev"
           },
           {
-            "label": "Mill \u00b7 Organize tasks",
-            "href": "https://github.com/avgeek-oss/mill"
-          },
-          {
-            "label": "Rootset \u00b7 Manage structured data",
-            "href": "https://github.com/avgeek-oss/rootset"
+            "label": "All OSS projects",
+            "href": "https://github.com/avgeek-oss/.github/blob/main/profile/README.md#whats-in-the-list"
           }
         ]
       }
