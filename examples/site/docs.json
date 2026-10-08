@@ -72,8 +72,45 @@
             "href": "/reference"
           }
         ]
+      },
+      {
+        "header": "Our OSS Philosophy",
+        "items": [
+          {
+            "label": "Why we build open source",
+            "href": "https://github.com/avgeek-oss/.github/blob/main/profile/README.md"
+          },
+          {
+            "label": "Report an issue",
+            "href": "https://github.com/avgeek-oss/oss-docs/issues"
+          }
+        ]
+      },
+      {
+        "header": "Other OSS Apps",
+        "items": [
+          {
+            "label": "Towbar · Deploy your apps",
+            "href": "https://www.towbar.dev"
+          },
+          {
+            "label": "Vitalog · Keep your health ledger",
+            "href": "https://www.vitalog.dev"
+          },
+          {
+            "label": "Mill · Organize tasks",
+            "href": "https://github.com/avgeek-oss/mill"
+          },
+          {
+            "label": "Rootset · Manage structured data",
+            "href": "https://github.com/avgeek-oss/rootset"
+          }
+        ]
       }
-    ]
+    ],
+    "socials": {
+      "github": "https://github.com/avgeek-oss"
+    }
   },
   "redirects": []
 }

@@ -34,3 +34,11 @@ Run sync after changing site.json or upgrading the kit, and check in CI. A drift
 Brand colors are six-digit hex values in `colors.primary`, `colors.light`, and `colors.dark`. Homepage actions and hero text use `colors.primary` in light mode and the lighter `colors.light` variant in dark mode, with button text chosen for contrast. Additional product styles can use the shared `--oss-*` variables without copying layout rules. Keep logo/provider styling and product-only assets local.
 
 Choose a dark, readable `colors.primary` and a lighter `colors.light` variant for dark backgrounds. Header and hero CTAs and hero text use the same active accent in each theme. `ActionLink` renders Mintlify's native header CTA structure and utility classes; there is no separate button geometry. Shared CSS only fills the native background and foreground color slots, with a neutral secondary variant.
+
+## Footer structure
+
+Use native `footer.links` groups rather than a separate footer snippet. Start with **Documentation**, linking to the product's quickstart, installation, connection guide and operational reference. Add **Our OSS Philosophy**, linking to the [Avgeek OSS organization README](https://github.com/avgeek-oss/.github/blob/main/profile/README.md), the product repository and its issue tracker. Add **Other OSS Apps** with a short purpose beside each other application. Link to its public site when available, otherwise its public repository. Keep any existing legal destinations. These are ordinary crawlable links; do not add `nofollow` or client-only navigation.
+
+Product repositories own the links and labels in `site.json`. Exclude the current app from Other OSS Apps, and do not advertise guessed domains or planned features. The example demonstrates this structure.
+
+The shared stylesheet keeps a 72px gap below homepage content (48px on mobile), then lays out Mintlify's advanced footer as a brand/social row, native link columns and the native utility row. Link labels wrap instead of truncating. The DOM bridge targets Mintlify's `#footer.advanced-footer` and its native brand/link/social row; changes to that structure require rendered desktop/mobile verification. Search, appearance controls and Mintlify attribution stay native.
