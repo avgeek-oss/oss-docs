@@ -17,6 +17,13 @@
   "contextual": {
     "options": ["copy", "view", "chatgpt", "claude"]
   },
+  "seo": {
+    "indexing": "all",
+    "metatags": {
+      "og:type": "website",
+      "twitter:card": "summary_large_image"
+    }
+  },
   "name": "Example",
   "description": "A sample project for the shared documentation kit.",
   "logo": {
@@ -26,7 +33,7 @@
   },
   "favicon": "/logo.svg",
   "colors": {
-    "primary": "#A16207",
+    "primary": "#B08505",
     "light": "#B08505",
     "dark": "#B9872C"
   },
