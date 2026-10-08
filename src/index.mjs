@@ -24,7 +24,6 @@ export function defineSite(input) {
     ...structuredClone(siteDefaults),
     ...structuredClone(input),
   };
-  config.colors.primary = config.colors.light;
   config.seo = {
     ...structuredClone(siteDefaults.seo),
     ...structuredClone(input.seo ?? {}),

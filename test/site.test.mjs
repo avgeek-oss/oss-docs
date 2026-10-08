@@ -39,6 +39,7 @@ test("site defaults preserve product-owned data without mutating input", () => {
   assert.equal(config.theme, "mint");
   assert.equal(config.interaction.drilldown, false);
   assert.deepEqual(config.navigation, original.navigation);
+  assert.deepEqual(config.colors, original.colors);
   config.footer.links[0].items[0].label = "Changed";
   assert.deepEqual(input, original);
   assert.throws(() => defineSite({ ...input, navbar: {} }), /CTA/);
@@ -75,7 +76,7 @@ test("generated files survive packaging, detect drift and leave app content inta
       config,
       JSON.stringify({
         ...input,
-        colors: { primary: "#F2CD51", light: "#77520A", dark: "#E0B84A" },
+        colors: { primary: "#77520A", light: "#E0B84A", dark: "#77520A" },
       }),
     );
     await syncSite({ config, dir });

@@ -6,10 +6,10 @@
   --oss-heading-accent: #a16207;
 }
 .dark {
-  --oss-primary: #b9872c;
+  --oss-primary: #b08505;
   --oss-primary-hover: color-mix(in oklch, var(--oss-primary) 90%, white);
   --oss-on-primary: #171717;
-  --oss-heading-accent: #b9872c;
+  --oss-heading-accent: #b08505;
 }
 /* Homepage only. Documentation retains Mintlify's native layout and typography. */
 .oss-home {
