@@ -4,7 +4,7 @@ import { mkdtemp, readFile, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { defineSite, validateNavigation } from "../src/index.mjs";
-import { syncSite } from "../bin/oss-docs.mjs";
+import { syncSite } from "../bin/mintlify-docs.mjs";
 
 const input = JSON.parse(
   await readFile(
@@ -60,7 +60,7 @@ test("generated files survive packaging, detect drift and leave app content inta
     const manifest = JSON.parse(
       await readFile(join(dir, ".oss-docs.json"), "utf8"),
     );
-    assert.equal(manifest.package, "@avgeek-oss/docs");
+    assert.equal(manifest.package, "@avgeek-oss/mintlify-docs");
     assert.equal(
       await readFile(join(dir, "guide.mdx"), "utf8"),
       "Product-owned content",
