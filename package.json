@@ -1,6 +1,6 @@
 {
-  "name": "@avgeek-oss/docs",
-  "version": "0.1.5",
+  "name": "@avgeek-oss/mintlify-docs",
+  "version": "0.1.6",
   "description": "Shared Mintlify homepage layouts, documentation primitives and site tooling for Avgeek OSS projects",
   "type": "module",
   "license": "Apache-2.0",
@@ -13,7 +13,8 @@
     "url": "git+https://github.com/avgeek-oss/oss-docs.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "exports": {
     ".": {
@@ -22,7 +23,7 @@
     }
   },
   "bin": {
-    "oss-docs": "./bin/oss-docs.mjs"
+    "mintlify-docs": "./bin/mintlify-docs.mjs"
   },
   "files": [
     "src",
@@ -35,14 +36,15 @@
     "NOTICE"
   ],
   "scripts": {
-    "sync:example": "node bin/oss-docs.mjs sync --config examples/site/site.json --dir examples/site",
-    "check:example": "node bin/oss-docs.mjs check --config examples/site/site.json --dir examples/site",
+    "sync:example": "node bin/mintlify-docs.mjs sync --config examples/site/site.json --dir examples/site",
+    "check:example": "node bin/mintlify-docs.mjs check --config examples/site/site.json --dir examples/site",
     "dev": "cd examples/site && npx --yes mint@4.2.851 dev --port 4176",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . && stylelint assets/*.css",
     "test": "node --test test/*.test.mjs",
-    "verify": "pnpm format:check && pnpm lint && pnpm test && pnpm check:example && node scripts/verify-package.mjs"
+    "verify": "pnpm format:check && pnpm lint && pnpm test && pnpm check:example && node scripts/verify-package.mjs",
+    "test:published": "node scripts/verify-package.mjs --published"
   },
   "devDependencies": {
     "eslint": "^10.12.0",

@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-const { name, version } = JSON.parse(await readFile("package.json", "utf8"));
+const { name, version, publishConfig } = JSON.parse(
+  await readFile("package.json", "utf8"),
+);
+assert.equal(name, "@avgeek-oss/mintlify-docs");
+assert.equal(publishConfig.registry, "https://registry.npmjs.org");
 assert(/^\d+\.\d+\.\d+$/.test(version));
 assert.equal(process.env.GITHUB_REF_NAME, `v${version}`);
 if (
@@ -24,7 +28,7 @@ if (
           `${name}@${version}`,
           "dist.integrity",
           "--json",
-          "--registry=https://npm.pkg.github.com",
+          "--registry=https://registry.npmjs.org",
         ],
         { encoding: "utf8" },
       ),

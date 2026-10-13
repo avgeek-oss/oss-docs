@@ -1,4 +1,4 @@
-# Avgeek OSS Docs
+# Avgeek OSS Mintlify Docs
 
 Shared Mintlify homepage layouts, documentation primitives, and site tooling for Avgeek OSS projects. Product repositories own their content, branding, navigation destinations, screenshots, API schemas, analytics, and legal pages.
 
@@ -6,19 +6,21 @@ Mintlify custom components cannot import external npm packages. This kit install
 
 ## Install and use
 
-Use Node.js 24 and pnpm 11. For GitHub Packages, configure the `@avgeek-oss` scope for `https://npm.pkg.github.com` and supply credentials through your environment. Do not commit tokens. Before a registry release, install an immutable Git commit:
+Use Node.js 24 and pnpm 11. The package is public on npmjs.org and requires no registry credentials.
 
 ```bash
-pnpm add -Dw "@avgeek-oss/docs@github:avgeek-oss/oss-docs#<full-commit-sha>"
+pnpm add -Dw @avgeek-oss/mintlify-docs@0.1.6
 ```
+
+When migrating from `@avgeek-oss/docs`, remove that dependency, add `@avgeek-oss/mintlify-docs`, and update scripts to use the `mintlify-docs` CLI. Change any `@avgeek-oss` registry mapping to `https://registry.npmjs.org` and refresh the lockfile. Generated filenames and snippet import paths stay the same. Run `docs:sync` to update their package metadata.
 
 Create a product-owned `docs/site.json`. Use [the runnable example](examples/site/site.json) for the required brand, navigation, header CTA, and footer fields. All additional native Mintlify options are preserved.
 
 ```json
 {
   "scripts": {
-    "docs:sync": "oss-docs sync --config docs/site.json --dir docs",
-    "docs:check": "oss-docs check --config docs/site.json --dir docs"
+    "docs:sync": "mintlify-docs sync --config docs/site.json --dir docs",
+    "docs:check": "mintlify-docs check --config docs/site.json --dir docs"
   }
 }
 ```
@@ -60,6 +62,6 @@ pnpm dev
 
 The example preview runs at `http://localhost:4176`. CI also validates the example with Mintlify's pinned CLI. Package verification installs the tarball into a fresh temporary project and runs both generation and drift checking outside this checkout.
 
-Releases use `v<package version>` tags on `main`. CI verifies the package first, then publishes the same tarball to GitHub Packages. No publishing runs on pull requests or ordinary branch pushes.
+Releases use `v<package version>` tags on `main`. CI verifies the package first, then publishes the same tarball publicly to npmjs.org using GitHub Actions OIDC. No publishing runs on pull requests or ordinary branch pushes. Configure `avgeek-oss/oss-docs` with workflow `ci.yml` as the package's npm trusted publisher. The initial npm package is created interactively from its tagged release's verified artifact; subsequent releases need no stored publishing token. Existing GitHub Packages versions remain available for old checkouts.
 
 Licensed under Apache-2.0. The initial layout is extracted from [Towbar](https://github.com/avgeek-oss/towbar).

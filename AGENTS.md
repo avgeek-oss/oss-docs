@@ -1,4 +1,4 @@
-# Avgeek OSS Docs
+# Avgeek OSS Mintlify Docs
 
 This repository owns shared Mintlify homepage layouts, repeated documentation presentation, navigation defaults, authoring conventions, and deterministic generation tooling. Product repositories own facts, copy, page categories, URLs, screenshots, logos, API schemas, legal policy, analytics, and deployment configuration. Keep internal plans, adoption schedules, review diaries, transcripts, logs, and empty Markdown placeholders out of Git.
 
@@ -25,4 +25,4 @@ Run pnpm verify: formatting, lint, behavioral tests, generated-example drift, an
 
 Do not weaken tests to make changes pass. Tests cover observable contracts, drift, invalid input, package completeness, and browser behavior; spacing needs rendered evidence. Add real prerequisites, outcomes, and failure/recovery paths to guides. Public documentation describes shipped behavior, not business plans.
 
-Publishing and deployment require user authorization. CI publishes only stable matching version tags on main after verification, using the verified tarball and job-scoped packages write permissions. Preserve unrelated work and distinguish local checks, CI, registry publication, and hosted-site deployment.
+Publishing and deployment require user authorization. CI publishes only stable matching version tags on main after verification, using the verified tarball and job-scoped id-token write permissions with npm trusted publishing. A new npm package may be bootstrapped interactively from the verified artifact of its tagged, merged release. A retry accepts an existing version only when its registry integrity matches the verified candidate. Preserve unrelated work and distinguish local checks, CI, registry publication, and hosted-site deployment.

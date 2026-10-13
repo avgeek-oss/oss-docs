@@ -6,4 +6,4 @@ Run `pnpm dev` to inspect the actual Mintlify example. Review the homepage and g
 
 Use `pnpm format` for formatting. Add behavioral tests for generator ownership, invalid configuration, drift, DOM bridging, and packaged consumption. Follow AGENTS.md for sandbox and code rules.
 
-For an authorized release, update package.json and CHANGELOG.md, regenerate the example, and merge verified changes into main. Create a matching `v<version>` tag. The workflow checks main ancestry and verifies the tarball before publishing it to GitHub Packages, then checks registry integrity. Ordinary pushes and PRs do not publish.
+For an authorized release, update package.json and CHANGELOG.md, regenerate the example, and merge verified changes into main. Create a matching `v<version>` tag. The workflow checks main ancestry and verifies the tarball before publishing it to npmjs.org, then checks registry integrity. Ordinary pushes and PRs do not publish.
