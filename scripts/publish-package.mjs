@@ -13,7 +13,7 @@ assert.equal(
   report.filename,
   `avgeek-oss-mintlify-docs-${manifest.version}.tgz`,
 );
-const tarball = `artifacts/${report.filename}`;
+const tarball = `./artifacts/${report.filename}`;
 assert.equal(
   report.integrity,
   `sha512-${createHash("sha512")
