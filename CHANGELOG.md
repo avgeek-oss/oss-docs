@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Match footer width and horizontal padding to the native header and tighten link spacing.
+
 - Use the available width for hero descriptions and add space between separate statements on mobile.
 - Reduce mobile hero top padding and add space below hero headings at every width.
 
