@@ -81,7 +81,13 @@
   align-items: center;
   gap: 26px;
 }
+.oss-home .oss-hero h1 {
+  margin-bottom: 12px;
+}
 .oss-home .oss-lead {
+  display: grid;
+  gap: 0;
+  width: 100%;
   font-size: 19px;
   max-width: none;
   line-height: 1.6;
@@ -308,7 +314,7 @@
     padding: 0 20px 48px;
   }
   .oss-hero {
-    padding: 36px 0 32px;
+    padding: 16px 0 32px;
     gap: 22px;
   }
 
@@ -317,7 +323,7 @@
   }
   .oss-home .oss-lead {
     font-size: 16px;
-    max-width: 34ch;
+    gap: 16px;
   }
   .oss-home .oss-lead-primary {
     white-space: normal;
