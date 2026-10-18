@@ -8,7 +8,7 @@ Use `Home` once for a custom homepage. Use `Hero` for its heading and lead copy.
 
 | Component      | Use and composition                                                                                     |
 | -------------- | ------------------------------------------------------------------------------------------------------- |
-| Home           | Root layout, maximum 1200px, responsive side padding and clearance before the footer.                   |
+| Home           | Root layout, maximum 1280px, responsive side padding and clearance before the footer.                   |
 | Hero           | Centered heading, lead copy and Actions.                                                                |
 | Actions        | Wrapping action row; contains ActionLink.                                                               |
 | ActionLink     | Navigation action; primary by default, secondary for an auxiliary destination. No other variant exists. |

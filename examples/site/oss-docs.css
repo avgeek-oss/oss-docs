@@ -18,7 +18,7 @@
   --oss-line: oklch(0.91 0 0);
   --oss-panel: oklch(0.97 0 0);
   --oss-accent: var(--oss-primary);
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 32px 72px;
   color: var(--oss-ink);
@@ -426,7 +426,12 @@
   outline: 2px solid var(--oss-primary);
   outline-offset: 4px;
 }
+/* Native navbar content row inside its centered wrapper. */
 @media (min-width: 1024px) {
+  #navbar > div:last-child > div > div > div {
+    padding-inline: 32px;
+  }
+
   #footer.advanced-footer > div {
     padding-inline: 48px;
   }
