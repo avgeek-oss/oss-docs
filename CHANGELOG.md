@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Cap header, documentation layout and footer content at 1280px, align their horizontal padding, and tighten footer link spacing.
+- Cap footer content at 1280px with responsive horizontal padding and tighter link spacing; retain native header and documentation widths.
 
 - Use the available width for hero descriptions and add space between separate statements on mobile.
 - Reduce mobile hero top padding and add space below hero headings at every width.

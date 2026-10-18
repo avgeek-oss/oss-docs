@@ -342,17 +342,6 @@
   }
 }
 
-/* Native Mintlify containers: header, sidebar/article/TOC row, footer. */
-#navbar > div:last-child,
-div:has(> #sidebar):has(> #content-container),
-#footer.advanced-footer > div {
-  max-width: 1280px;
-}
-
-div:has(> #sidebar):has(> #content-container) {
-  margin-inline: auto;
-}
-
 /* Keep native documentation navigation; simplify only the marketing homepage. */
 #navbar a:has(.nav-logo) {
   display: inline-flex;
@@ -367,6 +356,7 @@ div:has(> #sidebar):has(> #content-container) {
 
 /* Mintlify's native advanced footer: brand row, link groups, utility row. */
 #footer.advanced-footer > div {
+  max-width: 1280px;
   padding: 56px 16px 32px;
   gap: 32px;
 }
