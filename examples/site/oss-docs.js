@@ -12,6 +12,23 @@
   };
   const observer = new MutationObserver(schedule);
 
+  function enhanceFooterRepository() {
+    for (const link of document.querySelectorAll(
+      '#footer a[href^="https://github.com/"]:has(> svg):has(> .sr-only)',
+    )) {
+      const repository = new URL(link.href).pathname.split("/").filter(Boolean);
+      if (repository.length !== 2) continue;
+      let label = link.querySelector("[data-oss-repository]");
+      if (!label) {
+        label = document.createElement("span");
+        label.dataset.ossRepository = "";
+        link.append(label);
+      }
+      const name = repository.join("/");
+      if (label.textContent !== name) label.textContent = name;
+    }
+  }
+
   function enhanceHeader() {
     observer.disconnect();
     for (const logo of document.querySelectorAll(
@@ -25,6 +42,7 @@
         logo.append(wordmark);
       }
     }
+    enhanceFooterRepository();
     const header = document.getElementById("navbar");
     if (header) {
       const theme = header.querySelector("#theme-preference-menu-trigger");

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Show the repository name beside the footer GitHub icon and align the link to the right edge of the brand row.
+
 - Increase the homepage maximum width to 1280px and use 32px horizontal padding in the desktop header.
 
 - Cap footer content at 1280px with responsive horizontal padding and tighter link spacing; retain native header and documentation widths.
