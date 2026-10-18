@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Show the repository name beside the footer GitHub icon and align the link to the right edge of the brand row.
+
+- Increase the homepage maximum width to 1280px and use 32px horizontal padding in the desktop header.
+
+- Cap footer content at 1280px with responsive horizontal padding and tighter link spacing; retain native header and documentation widths.
+
+- Use the available width for hero descriptions and add space between separate statements on mobile.
+- Reduce mobile hero top padding and add space below hero headings at every width.
+
 ## 0.1.5
 
 - Keep the native footer logo and social links together in one row at desktop widths.

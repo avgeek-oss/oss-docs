@@ -8,7 +8,7 @@ Use `Home` once for a custom homepage. Use `Hero` for its heading and lead copy.
 
 | Component      | Use and composition                                                                                     |
 | -------------- | ------------------------------------------------------------------------------------------------------- |
-| Home           | Root layout, maximum 1200px, responsive side padding and clearance before the footer.                   |
+| Home           | Root layout, maximum 1280px, responsive side padding and clearance before the footer.                   |
 | Hero           | Centered heading, lead copy and Actions.                                                                |
 | Actions        | Wrapping action row; contains ActionLink.                                                               |
 | ActionLink     | Navigation action; primary by default, secondary for an auxiliary destination. No other variant exists. |
@@ -47,6 +47,19 @@ Use `Home` once for a custom homepage. Use `Hero` for its heading and lead copy.
 ```
 
 Do not put product copy inside a shared component or use CSS to reorder a mobile workflow. Composition keeps the reading order heading, description, action, then image. Product content lives in the page.
+
+### Hero descriptions
+
+Add `className="oss-lead"` to the hero description. Put each separate statement in its own `span`. The shared layout uses the available content width and adds a 16px gap between statements on mobile. A single statement has no extra gap.
+
+```mdx
+<p className="oss-lead">
+  <span>Explain what the project helps people do.</span>
+  <span>Add a separate detail about running or using it.</span>
+</p>
+```
+
+The hero has 16px of top padding on screens up to 640px wide. Tablet and desktop retain their existing spacing. The heading has 12px of extra space below it at every width. Product pages do not need utility classes or CSS overrides for these defaults.
 
 ## Screenshots
 

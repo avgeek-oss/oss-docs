@@ -18,7 +18,7 @@
   --oss-line: oklch(0.91 0 0);
   --oss-panel: oklch(0.97 0 0);
   --oss-accent: var(--oss-primary);
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 32px 72px;
   color: var(--oss-ink);
@@ -81,7 +81,13 @@
   align-items: center;
   gap: 26px;
 }
+.oss-home .oss-hero h1 {
+  margin-bottom: 12px;
+}
 .oss-home .oss-lead {
+  display: grid;
+  gap: 0;
+  width: 100%;
   font-size: 19px;
   max-width: none;
   line-height: 1.6;
@@ -308,7 +314,7 @@
     padding: 0 20px 48px;
   }
   .oss-hero {
-    padding: 36px 0 32px;
+    padding: 16px 0 32px;
     gap: 22px;
   }
 
@@ -317,7 +323,7 @@
   }
   .oss-home .oss-lead {
     font-size: 16px;
-    max-width: 34ch;
+    gap: 16px;
   }
   .oss-home .oss-lead-primary {
     white-space: normal;
@@ -363,13 +369,13 @@
 
 /* Mintlify's native advanced footer: brand row, link groups, utility row. */
 #footer.advanced-footer > div {
-  max-width: 1200px;
-  padding: 56px 32px 32px;
+  max-width: 1280px;
+  padding: 56px 16px 32px;
   gap: 32px;
 }
 #footer.advanced-footer > div > div:first-child {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   gap: 32px;
 }
 #footer.advanced-footer > div > div:first-child > div:first-child {
@@ -379,17 +385,12 @@
   justify-content: space-between;
   gap: 16px;
 }
-#footer.advanced-footer > div > div:first-child > div:nth-child(3) {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: center;
-  justify-self: end;
-}
 #footer.advanced-footer > div > div:first-child > div:nth-child(2) {
   display: grid;
   grid-column: 1 / -1;
+  grid-template-columns: repeat(auto-fit, minmax(192px, 1fr));
   order: 3;
-  gap: 32px;
+  gap: 24px;
 }
 #footer.advanced-footer > div > div:first-child > div:nth-child(2) > div {
   min-width: 0;
@@ -399,7 +400,7 @@
 #footer.advanced-footer > div > div:first-child > div:nth-child(2) a {
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
+  min-height: 24px;
   max-width: none;
   white-space: normal;
   text-overflow: clip;
@@ -409,7 +410,7 @@
   color: oklch(0.74 0 0);
 }
 #footer.advanced-footer > div > div:first-child > div:nth-child(2) > div > div {
-  gap: 8px;
+  gap: 4px;
 }
 #footer.advanced-footer a:hover {
   text-decoration: underline;
@@ -419,20 +420,41 @@
   outline: 2px solid var(--oss-primary);
   outline-offset: 4px;
 }
+/* Native navbar content row inside its centered wrapper. */
+@media (min-width: 1024px) {
+  #navbar > div:last-child > div > div > div {
+    padding-inline: 32px;
+  }
+
+  #footer.advanced-footer > div {
+    padding-inline: 48px;
+  }
+}
 @media (max-width: 767px) {
+  #footer.advanced-footer > div > div:first-child > div:nth-child(2) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   #footer.advanced-footer > div > div:first-child > div:first-child {
     grid-column: 1 / -1;
   }
 }
 @media (max-width: 640px) {
   #footer.advanced-footer > div {
-    padding: 36px 20px 24px;
+    padding: 36px 16px 24px;
   }
   #footer.advanced-footer > div > div:first-child > div:first-child {
     grid-column: 1 / -1;
   }
   #footer.advanced-footer > div > div:first-child > div:nth-child(2) a {
     min-height: 44px;
+  }
+  #footer.advanced-footer
+    > div
+    > div:first-child
+    > div:nth-child(2)
+    > div
+    > div {
+    gap: 0;
   }
 }
 [data-oss-wordmark] {
@@ -566,5 +588,41 @@ body:has(.oss-home) {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
+  }
+}
+
+#footer.advanced-footer > div > div:first-child > div:first-child > div {
+  justify-content: flex-end;
+  min-width: 0;
+}
+#footer a:has(> [data-oss-repository]) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--oss-muted, oklch(0.45 0 0));
+}
+.dark #footer a:has(> [data-oss-repository]) {
+  color: oklch(0.74 0 0);
+}
+#footer a:has(> [data-oss-repository]) svg {
+  flex-shrink: 0;
+  background-color: currentColor;
+}
+#footer [data-oss-repository] {
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  #footer.advanced-footer > div > div:first-child:has(> div:nth-child(3)) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  #footer.advanced-footer > div > div:first-child > div:nth-child(3) {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    justify-self: end;
   }
 }
