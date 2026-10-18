@@ -355,6 +355,12 @@
   }
 }
 
+/* Match the native header container and advanced footer content width. */
+#navbar > div:last-child,
+#footer.advanced-footer > div {
+  max-width: 1280px;
+}
+
 /* Keep native documentation navigation; simplify only the marketing homepage. */
 #navbar a:has(.nav-logo) {
   display: inline-flex;
@@ -369,7 +375,6 @@
 
 /* Mintlify's native advanced footer: brand row, link groups, utility row. */
 #footer.advanced-footer > div {
-  max-width: 1472px;
   padding: 56px 16px 32px;
   gap: 32px;
 }
