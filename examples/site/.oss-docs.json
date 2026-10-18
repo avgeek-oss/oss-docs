@@ -3,7 +3,7 @@
   "version": "0.1.6",
   "files": {
     "docs.json": "469ebc02fbd43de4acd25dd94edb1b3c1436e1c5c06733abe85406d5018e3e77",
-    "oss-docs.css": "e8d8584047090539f0d23a5928a6c75afa1c2471156937964e9e5077897a18b4",
+    "oss-docs.css": "f0be8414bc4cf1fc37f1b901aa70085ae2184be5145867c40162eb828f672a94",
     "oss-docs.js": "64839f7d0beaefcec1de764d7dc78340a50e773f1e5a04cb3d848f20afcb55a9",
     "snippets/oss/homepage.jsx": "71c40e2d0129a37d9065cb7623414797f5e289a8b4a97a35dfcb58830d981fbd",
     "snippets/oss/screenshot.jsx": "2fae52c57ec498301ecf036f8639ef86892b713d08c5adf7e4cb4d42950f3a7d"

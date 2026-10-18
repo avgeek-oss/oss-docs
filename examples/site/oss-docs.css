@@ -355,10 +355,15 @@
   }
 }
 
-/* Match the native header container and advanced footer content width. */
+/* Native Mintlify containers: header, sidebar/article/TOC row, footer. */
 #navbar > div:last-child,
+div:has(> #sidebar):has(> #content-container),
 #footer.advanced-footer > div {
   max-width: 1280px;
+}
+
+div:has(> #sidebar):has(> #content-container) {
+  margin-inline: auto;
 }
 
 /* Keep native documentation navigation; simplify only the marketing homepage. */
