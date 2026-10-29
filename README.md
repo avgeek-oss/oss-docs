@@ -9,7 +9,7 @@ Mintlify custom components cannot import external npm packages. This kit install
 Use Node.js 24 and pnpm 11. The package is public on npmjs.org and requires no registry credentials.
 
 ```bash
-pnpm add -Dw @avgeek-oss/mintlify-docs@0.1.6
+pnpm add -Dw @avgeek-oss/mintlify-docs@0.2.0
 ```
 
 When migrating from `@avgeek-oss/docs`, remove that dependency, add `@avgeek-oss/mintlify-docs`, and update scripts to use the `mintlify-docs` CLI. Change any `@avgeek-oss` registry mapping to `https://registry.npmjs.org` and refresh the lockfile. Generated filenames and snippet import paths stay the same. Run `docs:sync` to update their package metadata.

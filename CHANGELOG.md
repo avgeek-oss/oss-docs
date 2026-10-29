@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 (2026-10-29)
 
 - Export `syncSite`, `checkSite`, `checkContent`, `loadSite`, `validateSite` and `imageDimensions` from the package root with types; `bin/` is only the CLI. Its `syncSite` re-export remains for 0.1.x scripts.
 - Copy `assets` listed in site.json on sync, record them in `.oss-docs.json`, compare them byte for byte on check, and remove copies a later configuration drops.
@@ -11,13 +11,9 @@
 - Label the footer GitHub social link from `footer.socials.github` instead of every GitHub icon link.
 - `@mdx-js/mdx` is now a runtime dependency, loaded only by `check --content`.
 - Remove the committed example site. Tests, package verification and CI's Mintlify validation generate a fixture site instead; preview it with `pnpm dev`.
-
 - Show the repository name beside the footer GitHub icon and align the link to the right edge of the brand row.
-
 - Increase the homepage maximum width to 1280px and use 32px horizontal padding in the desktop header.
-
 - Cap footer content at 1280px with responsive horizontal padding and tighter link spacing; retain native header and documentation widths.
-
 - Use the available width for hero descriptions and add space between separate statements on mobile.
 - Reduce mobile hero top padding and add space below hero headings at every width.
 

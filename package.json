@@ -1,6 +1,6 @@
 {
   "name": "@avgeek-oss/mintlify-docs",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Shared Mintlify homepage layouts, documentation primitives and site tooling for Avgeek OSS projects",
   "type": "module",
   "license": "Apache-2.0",
