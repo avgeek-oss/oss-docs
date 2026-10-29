@@ -1,67 +1,141 @@
-name: Validate and publish
+name: CI
 on:
   push:
     branches: [main]
     tags: ["v*"]
   pull_request:
+  # The Cut release workflow starts this on a tag it created. A tag pushed
+  # with the workflow token does not trigger the push event above.
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: docs-${{ github.ref }}
-  cancel-in-progress: false
+  # Pull request runs are grouped by branch so a newer push supersedes the
+  # running check. Every other run is grouped by commit, so main pushes and
+  # tags are never cancelled or replaced while pending; the release checks
+  # need a result for each exact commit.
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
+  # The ruleset on main requires a check named verify, and Cut release
+  # requires the main run of the commit to succeed. A release tag points at
+  # a commit that main already verified; the publish job reuses that run's
+  # artifact instead of verifying again.
   verify:
+    if: github.ref_type != 'tag'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # About 1.5 minutes, including a cold pnpm store.
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
           persist-credentials: false
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify
+      # CI only, not part of `pnpm verify`: it reads the live advisory
+      # database, so a new advisory fails the next run on any branch.
+      - run: pnpm audit --audit-level=moderate
       - name: Validate generated output with Mintlify
         run: pnpm validate:fixture
-      - name: Validate release tag and ancestry
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          node scripts/check-release.mjs
-          git merge-base --is-ancestor HEAD origin/main
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      # Only a release needs the candidate, and it reads it from the main
+      # run of the tagged commit.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: github.ref == 'refs/heads/main'
         with:
-          name: verified-package
+          name: package
           if-no-files-found: error
+          retention-days: 30
           path: artifacts/
   publish:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    if: always() && github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: verify
     runs-on: ubuntu-latest
+    # Generous: a publish cut off halfway needs a manual retry.
+    timeout-minutes: 10
     permissions:
       contents: read
+      actions: read
       id-token: write
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
           scope: "@avgeek-oss"
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          name: verified-package
-          path: artifacts/
-      - run: node scripts/check-release.mjs --candidate
+      - name: Validate release tag and main ancestry
+        run: |
+          node scripts/check-release.mjs
+          git merge-base --is-ancestor HEAD origin/main
+      - name: Download the artifact of the verified main run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$GITHUB_SHA&event=push&status=success&per_page=5" \
+            --jq '[.workflow_runs[] | select(.head_branch == "main")] | sort_by(.created_at) | last | .id // empty')
+          if [ -z "$run" ]; then
+            echo "::error::No successful CI push run exists on main for $GITHUB_SHA. Merge the commit, let main verify it, then release it."
+            exit 1
+          fi
+          echo "Using the artifact of run $run for $GITHUB_SHA."
+          gh run download "$run" --name package --dir artifacts
+      - name: Check verified package integrity
+        run: node scripts/check-release.mjs --candidate
+      # npm's dry run rejects an already-published version. The publisher
+      # accepts retries only when registry integrity matches the candidate.
       - name: Publish verified tarball
         run: node scripts/publish-package.mjs
       - name: Check registry integrity
         run: node scripts/check-release.mjs --published
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
-      - name: Verify fresh registry consumer
+      - name: Verify a fresh registry consumer
         run: pnpm test:published
+
+  # Records the published version on GitHub with its changelog section, as
+  # the other repositories do. A separate job keeps write access to the
+  # repository away from the npm publish job.
+  github-release:
+    needs: publish
+    if: ${{ !cancelled() && needs.publish.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Create or update the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          # Release sections start with "## X.Y.Z (YYYY-MM-DD)"; the next "## "
+          # heading ends the section.
+          awk -v v="$version" '/^## / { if (found) exit; found = (NF == 3 && $2 == v && $3 ~ /^\([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\)$/); next } found { print }' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          if ! grep -q '[^[:space:]]' "$RUNNER_TEMP/notes.md"; then
+            echo "::error::CHANGELOG.md has no '## $version (YYYY-MM-DD)' section."
+            exit 1
+          fi
+          title="Mintlify Docs $version"
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release edit "$GITHUB_REF_NAME" --title "$title" --notes-file "$RUNNER_TEMP/notes.md"
+          else
+            # Cut release refuses an older version, but a tag pushed by hand
+            # can still be one: keep Latest on the newest release.
+            releases=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" --jq '.[] | select((.draft or .prerelease) | not) | .tag_name')
+            newest=$( (printf '%s\n' "$releases" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' || true; echo "$GITHUB_REF_NAME") | sort -V | tail -1)
+            latest=true
+            if [ "$newest" != "$GITHUB_REF_NAME" ]; then latest=false; fi
+            gh release create "$GITHUB_REF_NAME" --verify-tag --latest="$latest" --title "$title" --notes-file "$RUNNER_TEMP/notes.md"
+          fi

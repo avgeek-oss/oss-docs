@@ -1,3 +1,6 @@
+# pnpm writes the lockfile in its own style. Formatting it with Prettier
+# makes every lockfile that pnpm or Dependabot writes fail format:check.
+pnpm-lock.yaml
 artifacts/
 node_modules/
 .preview/
