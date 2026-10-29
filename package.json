@@ -36,15 +36,13 @@
     "NOTICE"
   ],
   "scripts": {
-    "sync:example": "node bin/mintlify-docs.mjs sync --config examples/site/site.json --dir examples/site",
-    "check:example": "node bin/mintlify-docs.mjs check --config examples/site/site.json --dir examples/site --content",
-    "validate:example": "node bin/mintlify-docs.mjs validate --dir examples/site",
-    "dev": "cd examples/site && npx --yes mint@4.2.986 dev --port 4176",
+    "dev": "node scripts/preview.mjs && cd .preview/site && npx --yes mint@4.2.986 dev --port 4176",
+    "validate:fixture": "node scripts/validate-fixture.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . && stylelint assets/*.css",
     "test": "node --test test/*.test.mjs",
-    "verify": "pnpm format:check && pnpm lint && pnpm test && pnpm check:example && node scripts/verify-package.mjs",
+    "verify": "pnpm format:check && pnpm lint && pnpm test && node scripts/verify-package.mjs",
     "test:published": "node scripts/verify-package.mjs --published"
   },
   "devDependencies": {

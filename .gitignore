@@ -3,3 +3,4 @@ artifacts/
 .mintlify/
 *.log
 .DS_Store
+.preview/

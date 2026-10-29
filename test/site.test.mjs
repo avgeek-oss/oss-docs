@@ -20,13 +20,9 @@ import {
 } from "../src/index.mjs";
 import { syncSite as legacySyncSite } from "../bin/mintlify-docs.mjs";
 
-const input = JSON.parse(
-  await readFile(
-    new URL("../examples/site/site.json", import.meta.url),
-    "utf8",
-  ),
-);
-// The example without its tooling inputs, so tests control them.
+import { fixtureSite as input } from "./fixtures/site.mjs";
+
+// The fixture without its tooling inputs, so tests control them.
 const plain = structuredClone(input);
 delete plain.assets;
 delete plain.content;

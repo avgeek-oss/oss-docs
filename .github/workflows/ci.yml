@@ -25,8 +25,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify
-      - name: Validate actual Mintlify example
-        run: node bin/mintlify-docs.mjs validate --dir examples/site
+      - name: Validate generated output with Mintlify
+        run: pnpm validate:fixture
       - name: Validate release tag and ancestry
         if: startsWith(github.ref, 'refs/tags/')
         run: |

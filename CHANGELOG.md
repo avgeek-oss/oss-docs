@@ -7,9 +7,10 @@
 - Resolve `{ "$include": "<file>.json#/pointer" }` navigation lists on sync so generators no longer rewrite site.json.
 - Replace `{version}` in site.json with the version from the nearest package.json, or from `packageJson`.
 - Add `check --content`: navigation pages exist and compile as MDX, frontmatter title and description, duplicate and orphan routes, redirects, internal links and anchors in Markdown, attributes, frontmatter icons, CSS `url()` and `docs.json`, screenshot sizes from a manifest, and repository Markdown links. Every problem is reported.
-- Add `validate`, which runs `mint validate`, `broken-links --check-anchors --check-redirects --check-snippets` and `a11y` with Mintlify 4.2.986, and use it for the example in CI.
+- Add `validate`, which runs `mint validate`, `broken-links --check-anchors --check-redirects --check-snippets` and `a11y` with Mintlify 4.2.986.
 - Label the footer GitHub social link from `footer.socials.github` instead of every GitHub icon link.
 - `@mdx-js/mdx` is now a runtime dependency, loaded only by `check --content`.
+- Remove the committed example site. Tests, package verification and CI's Mintlify validation generate a fixture site instead; preview it with `pnpm dev`.
 
 - Show the repository name beside the footer GitHub icon and align the link to the right edge of the brand row.
 

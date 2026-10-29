@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { cp, mkdir, readFile, rm, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, mkdtemp, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
+import { writeFixtureSite } from "../test/fixtures/site.mjs";
 const manifest = JSON.parse(await readFile("package.json", "utf8"));
 const published = process.argv.includes("--published");
 await mkdir("artifacts", { recursive: true });
@@ -49,23 +50,33 @@ try {
     ],
     { cwd: dir, stdio: "pipe" },
   );
-  // Copy the example's sources, not its generated files, so the installed
-  // CLI regenerates everything outside this checkout.
-  const exampleManifest = JSON.parse(
-    await readFile("examples/site/.oss-docs.json", "utf8"),
+  // The installed CLI must generate exactly what this checkout generates for
+  // the fixture. The verify job records the checkout's hashes next to the
+  // tarball; the published check (no dependencies installed) reuses them.
+  let expectedFiles;
+  if (published) {
+    expectedFiles = JSON.parse(
+      await readFile("artifacts/fixture-files.json", "utf8"),
+    );
+  } else {
+    const { syncSite } = await import("../src/index.mjs");
+    const local = await mkdtemp(join(tmpdir(), "mintlify-docs-local-"));
+    try {
+      await syncSite(await writeFixtureSite(local));
+      expectedFiles = JSON.parse(
+        await readFile(join(local, "site/.oss-docs.json"), "utf8"),
+      ).files;
+    } finally {
+      await rm(local, { recursive: true, force: true });
+    }
+    await writeFile(
+      "artifacts/fixture-files.json",
+      JSON.stringify(expectedFiles, null, 2),
+    );
+  }
+  const { config: site, dir: content } = await writeFixtureSite(
+    join(dir, "fixture"),
   );
-  const generatedFiles = new Set(
-    [...Object.keys(exampleManifest.files), ".oss-docs.json"].map((name) =>
-      resolve("examples/site", name),
-    ),
-  );
-  const examples = join(dir, "examples");
-  await cp("examples", examples, {
-    recursive: true,
-    filter: (source) => !generatedFiles.has(resolve(source)),
-  });
-  const site = join(examples, "site/site.json");
-  const content = join(examples, "site");
   const bin = join(dir, "node_modules/.bin/mintlify-docs");
   for (const args of [["sync"], ["check", "--content"]])
     execFileSync(
@@ -82,7 +93,7 @@ try {
   );
   assert.equal(generatedManifest.package, manifest.name);
   assert.equal(generatedManifest.version, manifest.version);
-  assert.deepEqual(generatedManifest.files, exampleManifest.files);
+  assert.deepEqual(generatedManifest.files, expectedFiles);
   // Consumers import the API from the package root, never from bin/.
   execFileSync(
     process.execPath,

@@ -3,6 +3,7 @@ import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { parse } from "@babel/parser";
 import { compile } from "@mdx-js/mdx";
+import { fixturePages } from "./fixtures/site.mjs";
 
 test("shipped snippets obey the Mintlify sandbox and compile in real MDX imports", async () => {
   for (const name of ["homepage", "screenshot"]) {
@@ -20,16 +21,6 @@ test("shipped snippets obey the Mintlify sandbox and compile in real MDX imports
       );
     }
   }
-  await compile(
-    await readFile(
-      new URL("../examples/site/index.mdx", import.meta.url),
-      "utf8",
-    ),
-  );
-  await compile(
-    await readFile(
-      new URL("../examples/site/guide.mdx", import.meta.url),
-      "utf8",
-    ),
-  );
+  await compile(fixturePages["index.mdx"]);
+  await compile(fixturePages["guide.mdx"]);
 });

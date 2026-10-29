@@ -3,8 +3,14 @@ import test from "node:test";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { checkContent, checkSite, imageDimensions } from "../src/index.mjs";
+import {
+  checkContent,
+  checkSite,
+  imageDimensions,
+  syncSite,
+} from "../src/index.mjs";
 import { createIgnore } from "../src/ignore.mjs";
+import { writeFixtureSite } from "./fixtures/site.mjs";
 
 const png = (width, height) => {
   const header = Buffer.alloc(24);
@@ -445,17 +451,22 @@ test(".mintignore patterns follow gitignore rules", () => {
   assert.equal(createIgnore([])("guide.md"), false);
 });
 
-test("the example's generated docs.json resolves its include and version", async () => {
-  const docs = JSON.parse(
-    await readFile(
-      new URL("../examples/site/docs.json", import.meta.url),
-      "utf8",
-    ),
-  );
-  assert.deepEqual(docs.navigation.dropdowns[0].groups[1], {
-    group: "Reference",
-    pages: ["reference"],
-  });
-  assert.equal(docs.footer.links[0].items[0].label, "Get started with v1.0.0");
-  assert.equal("assets" in docs || "content" in docs, false);
+test("the fixture's generated docs.json resolves its include and version", async () => {
+  const root = await mkdtemp(join(tmpdir(), "oss-docs-fixture-"));
+  try {
+    const { config, dir } = await writeFixtureSite(root);
+    await syncSite({ config, dir });
+    const docs = JSON.parse(await readFile(join(dir, "docs.json"), "utf8"));
+    assert.deepEqual(docs.navigation.dropdowns[0].groups[1], {
+      group: "Reference",
+      pages: ["reference"],
+    });
+    assert.equal(
+      docs.footer.links[0].items[0].label,
+      "Get started with v1.0.0",
+    );
+    assert.equal("assets" in docs || "content" in docs, false);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });

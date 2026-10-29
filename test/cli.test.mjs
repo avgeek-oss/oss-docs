@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { execFile } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { promisify } from "node:util";
-import { mintVersion, validateSite } from "../src/index.mjs";
+import { mintVersion, syncSite, validateSite } from "../src/index.mjs";
+import { writeFixtureSite } from "./fixtures/site.mjs";
 
 const run = promisify(execFile);
 const bin = new URL("../bin/mintlify-docs.mjs", import.meta.url).pathname;
@@ -14,7 +17,7 @@ test("validate runs every pinned Mintlify check and reports each failure", async
   const outcome = [0, 1, 2];
   await assert.rejects(
     validateSite({
-      dir: "examples/site",
+      dir: "fixture/site",
       run: async (args, options) => {
         calls.push({ args, cwd: options.cwd });
         return outcome[calls.length - 1];
@@ -43,9 +46,9 @@ test("validate runs every pinned Mintlify check and reports each failure", async
       ["--yes", `mint@${mintVersion}`, "a11y"],
     ],
   );
-  assert(calls.every(({ cwd }) => cwd.endsWith("/examples/site")));
+  assert(calls.every(({ cwd }) => cwd.endsWith("/fixture/site")));
   assert.deepEqual(
-    await validateSite({ dir: "examples/site", run: async () => 0 }),
+    await validateSite({ dir: "fixture/site", run: async () => 0 }),
     [
       "mint validate",
       "mint broken-links --check-anchors --check-redirects --check-snippets",
@@ -70,27 +73,39 @@ test("the repository previews and validates with the pinned Mintlify version", a
     pinned.every((version) => version === mintVersion),
     pinned.join(),
   );
-  assert.match(workflow, /mintlify-docs\.mjs validate --dir examples\/site/);
+  // CI validates the kit's generated output for the fixture site.
+  assert.match(workflow, /run: pnpm validate:fixture$/m);
+  assert.equal(
+    scripts["validate:fixture"],
+    "node scripts/validate-fixture.mjs",
+  );
 });
 
 test("the CLI checks content and rejects incomplete commands", async () => {
-  const { stdout } = await run(
-    process.execPath,
-    [
-      bin,
-      "check",
-      "--config",
-      "examples/site/site.json",
-      "--dir",
-      "examples/site",
-      "--content",
-    ],
-    { cwd: root },
-  );
-  assert.match(
-    stdout,
-    /^Checked 7 generated files, 3 pages, \d+ links and 1 screenshot in examples\/site$/m,
-  );
+  const temp = await mkdtemp(join(tmpdir(), "oss-docs-cli-"));
+  try {
+    const { config, dir } = await writeFixtureSite(temp);
+    await syncSite({ config, dir });
+    const { stdout } = await run(
+      process.execPath,
+      [
+        bin,
+        "check",
+        "--config",
+        "site/site.json",
+        "--dir",
+        "site",
+        "--content",
+      ],
+      { cwd: temp },
+    );
+    assert.match(
+      stdout,
+      /^Checked 7 generated files, 3 pages, \d+ links and 1 screenshot in site$/m,
+    );
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
   for (const args of [
     [],
     ["sync", "--dir", "docs"],
