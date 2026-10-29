@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
-import { execFileSync } from "node:child_process";
+import { npmWhenVisible } from "./registry.mjs";
 const { name, version, publishConfig } = JSON.parse(
   await readFile("package.json", "utf8"),
 );
@@ -21,8 +21,7 @@ if (
   assert.equal(integrity, packed.integrity);
   if (process.argv.includes("--published")) {
     const published = JSON.parse(
-      execFileSync(
-        "npm",
+      await npmWhenVisible(
         [
           "view",
           `${name}@${version}`,
@@ -30,7 +29,7 @@ if (
           "--json",
           "--registry=https://registry.npmjs.org",
         ],
-        { encoding: "utf8" },
+        `${name}@${version}`,
       ),
     );
     assert.equal(published, integrity);

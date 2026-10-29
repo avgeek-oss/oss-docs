@@ -4,26 +4,29 @@ import { mkdir, readFile, rm, mkdtemp, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { writeFixtureSite } from "../test/fixtures/site.mjs";
+import { npmWhenVisible } from "./registry.mjs";
 const manifest = JSON.parse(await readFile("package.json", "utf8"));
 const published = process.argv.includes("--published");
 await mkdir("artifacts", { recursive: true });
 const dir = await mkdtemp(join(tmpdir(), "mintlify-docs-consumer-"));
 try {
   const destination = published ? dir : "artifacts";
+  const packArguments = [
+    "pack",
+    published ? `${manifest.name}@${manifest.version}` : ".",
+    "--registry=https://registry.npmjs.org",
+    "--json",
+    "--pack-destination",
+    destination,
+    "--ignore-scripts",
+  ];
   const [packed] = JSON.parse(
-    execFileSync(
-      "npm",
-      [
-        "pack",
-        published ? `${manifest.name}@${manifest.version}` : ".",
-        "--registry=https://registry.npmjs.org",
-        "--json",
-        "--pack-destination",
-        destination,
-        "--ignore-scripts",
-      ],
-      { encoding: "utf8" },
-    ),
+    published
+      ? await npmWhenVisible(
+          packArguments,
+          `${manifest.name}@${manifest.version}`,
+        )
+      : execFileSync("npm", packArguments, { encoding: "utf8" }),
   );
   assert.equal(packed.name, manifest.name);
   assert.equal(packed.version, manifest.version);
