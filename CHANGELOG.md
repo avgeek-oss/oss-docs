@@ -2,6 +2,7 @@
 
 ## 0.2.0 (2026-10-29)
 
+- Breaking: the package now requires Node 26 or later.
 - Export `syncSite`, `checkSite`, `checkContent`, `loadSite`, `validateSite` and `imageDimensions` from the package root with types; `bin/` is only the CLI. Its `syncSite` re-export remains for 0.1.x scripts.
 - Copy `assets` listed in site.json on sync, record them in `.oss-docs.json`, compare them byte for byte on check, and remove copies a later configuration drops.
 - Resolve `{ "$include": "<file>.json#/pointer" }` navigation lists on sync so generators no longer rewrite site.json.

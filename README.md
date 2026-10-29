@@ -6,7 +6,7 @@ Mintlify custom components cannot import external npm packages. This kit install
 
 ## Install and use
 
-Use Node.js 24 and pnpm 11. The package is public on npmjs.org and requires no registry credentials.
+Use Node.js 26 and pnpm 11. The package is public on npmjs.org and requires no registry credentials.
 
 ```bash
 pnpm add -Dw @avgeek-oss/mintlify-docs@0.2.0
@@ -54,18 +54,32 @@ Set `mode: "custom"` in homepage frontmatter. Import all snippet dependencies in
 - [Navigation and site configuration](docs/navigation.md): categories, grouped page lists, header/footer links, and generated-file ownership.
 - [Site tooling](docs/tooling.md): sync, drift and content checks, pinned Mintlify validation, assets, navigation includes, `{version}`, and the package API.
 - [Writing documentation](docs/authoring.md): task guides, reference pages, native Mintlify components, examples, screenshots, and verification.
-- [Contributing](CONTRIBUTING.md): local checks, preview, package contracts, and releases.
 
-## Develop
+## Development
+
+These are development notes for the maintainers. We are not accepting contributions from public sources, to curb automated pull requests and because there are no dedicated resources to review and sign them off. Feedback and issues are welcome in this repository; we triage them and strive to fix them at the earliest. Report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
+Use Node.js 26 and pnpm 11. Development rules are in [AGENTS.md](AGENTS.md).
 
 ```bash
 pnpm install --frozen-lockfile
 pnpm verify
+pnpm validate:fixture
 pnpm dev
 ```
 
-`pnpm dev` writes the test fixture site into `.preview/` (not committed), syncs it and serves it at `http://localhost:4176`. CI also validates the fixture's generated output with Mintlify's pinned CLI (`pnpm validate:fixture`). Package verification installs the tarball into a fresh temporary project and runs both generation and drift checking outside this checkout.
+`pnpm verify` checks formatting, runs oxlint and Stylelint and the tests, and installs the packed tarball into a fresh temporary project outside this checkout, where it runs generation and drift checking. Tests sync the fixture site in `test/fixtures/site.mjs` into temporary directories; nothing generated is committed. When a change adds a feature or export, exercise it in the fixture.
 
-Releases use `v<package version>` tags on `main`. CI verifies the package first, then publishes the same tarball publicly to npmjs.org using GitHub Actions OIDC. No publishing runs on pull requests or ordinary branch pushes. Configure `avgeek-oss/oss-docs` with workflow `ci.yml` as the package's npm trusted publisher. The initial npm package is created interactively from its tagged release's verified artifact; subsequent releases need no stored publishing token. Existing GitHub Packages versions remain available for old checkouts.
+`pnpm validate:fixture` runs Mintlify's pinned validation, broken-link and accessibility checks on the fixture's generated output; it needs network access, and CI runs it too. To move to a newer Mintlify CLI, change `mintVersion` in `src/validate.mjs` and the `dev` script together. `pnpm dev` writes the fixture into `.preview/` (not committed), syncs it and serves it at `http://localhost:4176`. Review the homepage and guide in light and dark themes at desktop and mobile widths, and check that search, category navigation, nested groups, theme controls, keyboard focus, CTA destinations and footer links still work.
+
+Release notes are in [CHANGELOG.md](CHANGELOG.md). Source and third-party attribution are in `NOTICE` and `LICENSE`.
+
+## Publishing
+
+Pull requests and pushes to `main` run the `verify` check. Update the version and add its `## X.Y.Z (YYYY-MM-DD)` section to the changelog through the normal review process. Once that has merged and `main` is green, run the **Cut release** workflow from `main` (Actions, Cut release, Run workflow). It checks the version, changelog, tag and npm state, and that the verified `main` run of the commit still has its package artifact, then creates the annotated `v<version>` tag and starts the publish run on it. Pushing the same tag by hand does the same.
+
+The publish run does not verify or rebuild again. It downloads the tarball that the `main` run of the tagged commit verified, checks its integrity, publishes those exact bytes without running package lifecycle scripts, checks that the registry serves the same integrity, and installs it in a fresh consumer. A retry accepts an existing version only if its integrity matches the verified candidate. After a successful publish, a separate job creates or updates the tag's GitHub release from that version's `CHANGELOG.md` section.
+
+The publish job uses npm trusted publishing with GitHub Actions OIDC. Configure `avgeek-oss/oss-docs` and workflow `ci.yml` in the package's npm trusted-publisher settings. The job has `id-token: write`; no publishing token is stored in GitHub secrets. Existing GitHub Packages versions remain available for old checkouts.
 
 Licensed under Apache-2.0. The initial layout is extracted from [Towbar](https://github.com/avgeek-oss/towbar).
