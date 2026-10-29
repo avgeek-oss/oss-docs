@@ -386,6 +386,37 @@ test("image dimensions come from PNG, JPEG and SVG headers", () => {
   assert.throws(() => imageDimensions(Buffer.from("GIF89a")), /unsupported/);
   assert.throws(() => imageDimensions(Buffer.from([0xff, 0xd8, 0, 0])), /JPEG/);
   assert.throws(() => imageDimensions(Buffer.from("<svg>")), /no width/);
+  assert.deepEqual(
+    imageDimensions(
+      Buffer.from(
+        '<?xml version="1.0"?>\n<!DOCTYPE svg>\n<!-- a --><!-- b -->\n<svg viewBox="0 0 8 6">',
+      ),
+    ),
+    { format: "svg", width: 8, height: 6 },
+  );
+  assert.throws(
+    () => imageDimensions(Buffer.from("<svgfont></svgfont>")),
+    /unsupported/,
+  );
+  assert.throws(
+    () => imageDimensions(Buffer.from("<!-- never closed <svg>")),
+    /unsupported/,
+  );
+});
+
+test("hostile inputs are scanned in linear time", () => {
+  const started = performance.now();
+  assert.throws(
+    () => imageDimensions(Buffer.from(`<!--${"--><!--".repeat(600)}`)),
+    /unsupported/,
+  );
+  const ignores = createIgnore([
+    `${"/".repeat(50_000)}x`,
+    `docs${"/".repeat(50_000)}`,
+  ]);
+  assert(ignores("x"));
+  assert(ignores("docs", true));
+  assert(performance.now() - started < 1000);
 });
 
 test(".mintignore patterns follow gitignore rules", () => {

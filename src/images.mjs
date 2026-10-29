@@ -61,11 +61,37 @@ export function imageDimensions(image) {
     };
   }
   if (image[0] === 0xff && image[1] === 0xd8) return jpegDimensions(image);
-  if (
-    /^\s*(?:<\?xml[^>]*>\s*)?(?:<!--[\s\S]*?-->\s*|<!DOCTYPE[^>]*>\s*)*<svg\b/i.test(
-      image.toString("utf8", 0, 4096),
-    )
-  )
+  if (startsWithSvg(image.toString("utf8", 0, 4096)))
     return svgDimensions(image);
   throw new Error("unsupported image format; use PNG, JPEG or SVG");
+}
+
+// True when the text is an SVG document: an optional XML declaration, then
+// any comments and doctype, then `<svg`. Scanned by hand because the
+// equivalent regex backtracks badly on repeated comments.
+function startsWithSvg(text) {
+  let index = 0;
+  const skipSpace = () => {
+    while (index < text.length && /\s/.test(text[index])) index++;
+  };
+  const skipPast = (end) => {
+    const found = text.indexOf(end, index);
+    if (found === -1) return false;
+    index = found + end.length;
+    return true;
+  };
+  const startsAt = (prefix) =>
+    text.slice(index, index + prefix.length).toLowerCase() === prefix;
+  skipSpace();
+  if (startsAt("<?xml") && !skipPast(">")) return false;
+  for (;;) {
+    skipSpace();
+    if (startsAt("<!--")) {
+      index += 4;
+      if (!skipPast("-->")) return false;
+    } else if (startsAt("<!doctype")) {
+      if (!skipPast(">")) return false;
+    } else break;
+  }
+  return startsAt("<svg") && !/\w/.test(text[index + 4] ?? "");
 }

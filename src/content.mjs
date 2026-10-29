@@ -38,13 +38,19 @@ function display(path) {
 }
 const isExternal = (url) =>
   /^[a-z][a-z\d+.-]*:/i.test(url) || url.startsWith("//");
+// Scans instead of using a regex: `/\/+$/` backtracks on long runs of `/`.
+function trimSlashes(path) {
+  let start = 0;
+  let end = path.length;
+  while (start < end && path[start] === "/") start++;
+  while (end > start && path[end - 1] === "/") end--;
+  return path.slice(start, end);
+}
 // Mintlify serves `a/index.mdx` at `/a` and the root `index.mdx` at `/`.
 const routeKey = (path) =>
-  path
-    .replace(/^\/+|\/+$/g, "")
+  trimSlashes(path)
     .replace(/(^|\/)index$/, "")
     .replace(/\/$/, "");
-const trimSlashes = (path) => path.replace(/^\/+|\/+$/g, "");
 
 async function readOptional(path) {
   try {
@@ -149,10 +155,18 @@ function prose(text, frontmatterLength) {
   return { blocks, body: blocks.replace(/`[^`\n]*`/g, blank) };
 }
 
+// Repeats until stable, so removing one tag can't leave another behind.
+function stripTags(text) {
+  let previous;
+  do {
+    previous = text;
+    text = text.replace(/<[^<>]*>/g, "");
+  } while (text !== previous);
+  return text;
+}
+
 function slug(text) {
-  return text
-    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/<[^>]+>/g, "")
+  return stripTags(text.replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1"))
     .toLowerCase()
     .replace(/[`*_~]/g, "")
     .replace(/[^\p{L}\p{N}\s-]/gu, "")

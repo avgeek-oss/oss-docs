@@ -38,7 +38,7 @@ export function createIgnore(patterns) {
     const negate = line.startsWith("!");
     if (negate) line = line.slice(1);
     const directoryOnly = line.endsWith("/");
-    line = line.replace(/\/+$/, "");
+    while (line.endsWith("/")) line = line.slice(0, -1);
     const anchored = line.includes("/");
     line = line.replace(/^\/+/, "");
     if (line)
