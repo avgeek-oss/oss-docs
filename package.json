@@ -5,9 +5,9 @@
   "type": "module",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
-  "packageManager": "pnpm@11.5.3",
+  "packageManager": "pnpm@11.5.3+sha512.7ac1c919341c213a34dc0d02afb7143c5c26ac26ee8c4782deea821b8ac64d2134a081fd8941dae6e29bbb48f58dfc2b7fbceeccc07cb2f09d219d342a4969ed",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/avgeek-oss/oss-docs.git"
@@ -40,17 +40,17 @@
     "validate:fixture": "node scripts/validate-fixture.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "eslint . && stylelint assets/*.css",
+    "lint": "oxlint --deny-warnings --report-unused-disable-directives . && pnpm lint:styles",
+    "lint:styles": "stylelint \"assets/*.css\"",
     "test": "node --test test/*.test.mjs",
     "verify": "pnpm format:check && pnpm lint && pnpm test && node scripts/verify-package.mjs",
     "test:published": "node scripts/verify-package.mjs --published"
   },
   "devDependencies": {
-    "eslint": "^10.12.0",
-    "globals": "^17.0.0",
-    "stylelint": "^17.16.0",
     "@babel/parser": "^7.29.0",
-    "jsdom": "^28.1.0"
+    "jsdom": "^30.1.3",
+    "oxlint": "1.90.0",
+    "stylelint": "^17.16.0"
   },
   "dependencies": {
     "@mdx-js/mdx": "^3.1.1",

@@ -1,0 +1,6 @@
+# Transitive packages whose parents' ranges still allow an unpatched
+# release: undici through jsdom (tests only) and fast-uri through ajv.
+# Remove an entry once the lockfile resolves a patched version without it.
+overrides:
+  "undici@>=8.0.0 <8.12.2": 8.12.3
+  "fast-uri@>=3.0.0 <3.1.9": 3.1.9

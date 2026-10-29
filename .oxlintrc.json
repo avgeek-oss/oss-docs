@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [],
+  "categories": {
+    "correctness": "error"
+  },
+  "ignorePatterns": ["artifacts/**", ".preview/**"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "globals": {
+    "__OSS_DOCS_SETTINGS__": "readonly"
+  },
+  "rules": {
+    "eqeqeq": "error",
+    "no-constant-condition": "error",
+    "no-debugger": "error",
+    "no-empty": "error",
+    "no-undef": [
+      "error",
+      {
+        "typeof": false
+      }
+    ],
+    "no-unreachable": "error",
+    "no-unused-vars": "error"
+  }
+}
