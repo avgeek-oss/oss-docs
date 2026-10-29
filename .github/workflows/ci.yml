@@ -25,12 +25,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify
-      - name: Validate actual Mintlify example
-        run: |
-          npx --yes mint@4.2.851 validate
-          npx --yes mint@4.2.851 broken-links --check-anchors --check-redirects
-          npx --yes mint@4.2.851 a11y
-        working-directory: examples/site
+      - name: Validate generated output with Mintlify
+        run: pnpm validate:fixture
       - name: Validate release tag and ancestry
         if: startsWith(github.ref, 'refs/tags/')
         run: |

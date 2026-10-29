@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { mkdir, readFile, rm, mkdtemp, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
+import { writeFixtureSite } from "../test/fixtures/site.mjs";
 const manifest = JSON.parse(await readFile("package.json", "utf8"));
 const published = process.argv.includes("--published");
 await mkdir("artifacts", { recursive: true });
@@ -49,23 +50,62 @@ try {
     ],
     { cwd: dir, stdio: "pipe" },
   );
-  const site = join(dir, "site.json");
-  await writeFile(site, await readFile("examples/site/site.json"));
+  // The installed CLI must generate exactly what this checkout generates for
+  // the fixture. The verify job records the checkout's hashes next to the
+  // tarball; the published check (no dependencies installed) reuses them.
+  let expectedFiles;
+  if (published) {
+    expectedFiles = JSON.parse(
+      await readFile("artifacts/fixture-files.json", "utf8"),
+    );
+  } else {
+    const { syncSite } = await import("../src/index.mjs");
+    const local = await mkdtemp(join(tmpdir(), "mintlify-docs-local-"));
+    try {
+      await syncSite(await writeFixtureSite(local));
+      expectedFiles = JSON.parse(
+        await readFile(join(local, "site/.oss-docs.json"), "utf8"),
+      ).files;
+    } finally {
+      await rm(local, { recursive: true, force: true });
+    }
+    await writeFile(
+      "artifacts/fixture-files.json",
+      JSON.stringify(expectedFiles, null, 2),
+    );
+  }
+  const { config: site, dir: content } = await writeFixtureSite(
+    join(dir, "fixture"),
+  );
   const bin = join(dir, "node_modules/.bin/mintlify-docs");
-  for (const command of ["sync", "check"])
+  for (const args of [["sync"], ["check", "--content"]])
     execFileSync(
       process.execPath,
-      [bin, command, "--config", site, "--dir", dir],
+      [bin, ...args, "--config", site, "--dir", content],
       { stdio: "inherit" },
     );
-  const generated = JSON.parse(await readFile(join(dir, "docs.json"), "utf8"));
+  const generated = JSON.parse(
+    await readFile(join(content, "docs.json"), "utf8"),
+  );
   assert.equal(generated.name, "Example");
   const generatedManifest = JSON.parse(
-    await readFile(join(dir, ".oss-docs.json"), "utf8"),
+    await readFile(join(content, ".oss-docs.json"), "utf8"),
   );
   assert.equal(generatedManifest.package, manifest.name);
   assert.equal(generatedManifest.version, manifest.version);
-  assert.equal(Object.keys(generatedManifest.files).length, 5);
+  assert.deepEqual(generatedManifest.files, expectedFiles);
+  // Consumers import the API from the package root, never from bin/.
+  execFileSync(
+    process.execPath,
+    [
+      "--input-type=module",
+      "--eval",
+      `import { checkSite, syncSite, loadSite, mintVersion } from "${manifest.name}";
+const result = await checkSite({ config: ${JSON.stringify(site)}, dir: ${JSON.stringify(content)}, content: true });
+if (!result.pages || typeof syncSite !== "function" || typeof loadSite !== "function" || !mintVersion) process.exit(1);`,
+    ],
+    { cwd: dir, stdio: "inherit" },
+  );
   console.log(
     "Verified packed package from a fresh consumer outside this checkout.",
   );

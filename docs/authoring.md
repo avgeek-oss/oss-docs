@@ -34,4 +34,4 @@ Use reserved example domains, safe identifiers, and explicit placeholders for cr
 
 Keep screenshots beside the task they illustrate, not in an unrelated gallery. Capture light/dark pairs from the same seeded fixture and viewport; update captions and alt text when the UI changes. Product generators own image dimensions and API contract checks.
 
-Link to canonical internal pages. Avoid redirect chains and duplicate navigation entries. Preserve moved routes with explicit redirects. Check links and anchors, validate Mintlify configuration, and inspect mobile/light/dark rendering before declaring a guide ready.
+Link to canonical internal pages. Avoid redirect chains and duplicate navigation entries. Preserve moved routes with explicit redirects. Run `mintlify-docs check --content` and `mintlify-docs validate` for links, anchors and Mintlify configuration, and inspect mobile/light/dark rendering before declaring a guide ready.

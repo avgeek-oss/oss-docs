@@ -1,12 +1,7 @@
 import globals from "globals";
 export default [
   {
-    ignores: [
-      "node_modules/**",
-      "artifacts/**",
-      "examples/site/oss-docs.js",
-      "examples/site/snippets/oss/**",
-    ],
+    ignores: ["node_modules/**", "artifacts/**", ".preview/**"],
   },
   {
     files: ["**/*.mjs", "assets/*.js", "snippets/*.jsx"],
