@@ -2,11 +2,11 @@
   "name": "Example",
   "description": "A sample project for the shared documentation kit.",
   "logo": {
-    "light": "/logo.svg",
-    "dark": "/logo.svg",
+    "light": "/assets/logo.svg",
+    "dark": "/assets/logo.svg",
     "href": "/"
   },
-  "favicon": "/logo.svg",
+  "favicon": "/assets/logo.svg",
   "colors": {
     "primary": "#A16207",
     "light": "#B08505",
@@ -20,7 +20,13 @@
         "groups": [
           {
             "group": "Get started",
-            "pages": ["guide", "reference"]
+            "pages": ["guide"]
+          },
+          {
+            "group": "Reference",
+            "pages": {
+              "$include": "reference-navigation.json"
+            }
           }
         ]
       }
@@ -39,7 +45,7 @@
         "header": "Documentation",
         "items": [
           {
-            "label": "Get started",
+            "label": "Get started with v{version}",
             "href": "/guide"
           },
           {
@@ -83,5 +89,14 @@
       "github": "https://github.com/avgeek-oss/oss-docs"
     }
   },
-  "redirects": []
+  "redirects": [],
+  "assets": [
+    {
+      "from": "../brand/logo.svg",
+      "to": "assets/logo.svg"
+    }
+  ],
+  "content": {
+    "screenshots": "screenshots.json"
+  }
 }

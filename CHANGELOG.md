@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Export `syncSite`, `checkSite`, `checkContent`, `loadSite`, `validateSite` and `imageDimensions` from the package root with types; `bin/` is only the CLI. Its `syncSite` re-export remains for 0.1.x scripts.
+- Copy `assets` listed in site.json on sync, record them in `.oss-docs.json`, compare them byte for byte on check, and remove copies a later configuration drops.
+- Resolve `{ "$include": "<file>.json#/pointer" }` navigation lists on sync so generators no longer rewrite site.json.
+- Replace `{version}` in site.json with the version from the nearest package.json, or from `packageJson`.
+- Add `check --content`: navigation pages exist and compile as MDX, frontmatter title and description, duplicate and orphan routes, redirects, internal links and anchors in Markdown, attributes, frontmatter icons, CSS `url()` and `docs.json`, screenshot sizes from a manifest, and repository Markdown links. Every problem is reported.
+- Add `validate`, which runs `mint validate`, `broken-links --check-anchors --check-redirects --check-snippets` and `a11y` with Mintlify 4.2.986, and use it for the example in CI.
+- Label the footer GitHub social link from `footer.socials.github` instead of every GitHub icon link.
+- `@mdx-js/mdx` is now a runtime dependency, loaded only by `check --content`.
+
 - Show the repository name beside the footer GitHub icon and align the link to the right edge of the brand row.
 
 - Increase the homepage maximum width to 1280px and use 32px horizontal padding in the desktop header.

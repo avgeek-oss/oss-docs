@@ -20,12 +20,15 @@ Create a product-owned `docs/site.json`. Use [the runnable example](examples/sit
 {
   "scripts": {
     "docs:sync": "mintlify-docs sync --config docs/site.json --dir docs",
-    "docs:check": "mintlify-docs check --config docs/site.json --dir docs"
+    "docs:check": "mintlify-docs check --config docs/site.json --dir docs --content",
+    "docs:validate": "mintlify-docs validate --dir docs"
   }
 }
 ```
 
-Run `pnpm docs:sync`, commit its output, and run `pnpm docs:check` in CI before Mintlify validation. Repeat after upgrading the pinned kit. The command only writes its declared generated files; it leaves product pages, assets, and local styles untouched.
+Run `pnpm docs:sync`, commit its output, and run `pnpm docs:check` and `pnpm docs:validate` in CI. Repeat after upgrading the pinned kit. Sync only writes its declared generated files and the `assets` copies listed in `site.json`; it leaves product pages and local styles untouched. `--content` also checks navigation pages, MDX, frontmatter, routes, redirects, internal links, anchors and screenshot sizes. `validate` runs Mintlify's validation, broken-link and accessibility checks with the CLI version the kit pins. See [Site tooling](docs/tooling.md) for assets, navigation includes, `{version}` and the content checks.
+
+Scripts can import `syncSite`, `checkSite`, `checkContent`, `loadSite` and `validateSite` from `@avgeek-oss/mintlify-docs`; nothing needs a path inside the package.
 
 Import snippets directly into the parent MDX page:
 
@@ -49,6 +52,7 @@ Set `mode: "custom"` in homepage frontmatter. Import all snippet dependencies in
 
 - [Homepage and screenshots](docs/components.md): exported components, slots, heading structure, responsive images, and themes.
 - [Navigation and site configuration](docs/navigation.md): categories, grouped page lists, header/footer links, and generated-file ownership.
+- [Site tooling](docs/tooling.md): sync, drift and content checks, pinned Mintlify validation, assets, navigation includes, `{version}`, and the package API.
 - [Writing documentation](docs/authoring.md): task guides, reference pages, native Mintlify components, examples, screenshots, and verification.
 - [Contributing](CONTRIBUTING.md): local checks, preview, package contracts, and releases.
 
@@ -60,7 +64,7 @@ pnpm verify
 pnpm dev
 ```
 
-The example preview runs at `http://localhost:4176`. CI also validates the example with Mintlify's pinned CLI. Package verification installs the tarball into a fresh temporary project and runs both generation and drift checking outside this checkout.
+The example preview runs at `http://localhost:4176`. CI also validates the example with Mintlify's pinned CLI (`pnpm validate:example`). Package verification installs the tarball into a fresh temporary project and runs both generation and drift checking outside this checkout.
 
 Releases use `v<package version>` tags on `main`. CI verifies the package first, then publishes the same tarball publicly to npmjs.org using GitHub Actions OIDC. No publishing runs on pull requests or ordinary branch pushes. Configure `avgeek-oss/oss-docs` with workflow `ci.yml` as the package's npm trusted publisher. The initial npm package is created interactively from its tagged release's verified artifact; subsequent releases need no stored publishing token. Existing GitHub Packages versions remain available for old checkouts.
 

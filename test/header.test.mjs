@@ -72,53 +72,64 @@ test("header preserves native controls and destination semantics across rerender
   }
 });
 
-test("footer repository labels preserve social destinations across rerenders", async () => {
+test("footer repository labels follow footer.socials.github across rerenders", async () => {
   const dom = new JSDOM(
-    `<body><footer id="footer"><a href="https://github.com/example/project" target="_blank" rel="noopener noreferrer"><span class="sr-only">github</span><svg></svg></a><a href="https://github.com/example/project">GitHub Source</a></footer></body>`,
+    `<body><footer id="footer"><a href="https://github.com/example/project/" target="_blank" rel="noopener noreferrer"><span class="sr-only">github</span><svg></svg></a><a href="https://github.com/example/project">GitHub Source</a><a href="https://github.com/example/other"><span class="sr-only">github</span><svg></svg></a></footer></body>`,
     { runScripts: "outside-only", pretendToBeVisual: true },
   );
   try {
     const { window } = dom;
-    window.eval(
-      source.replace(
-        "__OSS_DOCS_SETTINGS__",
-        JSON.stringify({ name: "Example" }),
-      ),
-    );
+    const run = (repository) =>
+      window.eval(
+        source.replace(
+          "__OSS_DOCS_SETTINGS__",
+          JSON.stringify({ name: "Example", repository }),
+        ),
+      );
     const tick = () =>
       new Promise((resolve) =>
         window.requestAnimationFrame(() =>
           window.requestAnimationFrame(resolve),
         ),
       );
+    const labels = () =>
+      [...window.document.querySelectorAll("[data-oss-repository]")].map(
+        (label) => [
+          label.parentElement.getAttribute("href"),
+          label.textContent,
+        ],
+      );
+    run({
+      href: "https://github.com/example/project",
+      label: "example/project",
+    });
     await tick();
+    // Only the configured social link is labeled, not text links or others.
+    assert.deepEqual(labels(), [
+      ["https://github.com/example/project/", "example/project"],
+    ]);
     const link = window.document.querySelector("#footer a");
-    assert.equal(
-      link.querySelector("[data-oss-repository]").textContent,
-      "example/project",
-    );
     assert.equal(link.target, "_blank");
     assert.equal(link.rel, "noopener noreferrer");
-    assert.equal(
-      window.document.querySelectorAll("[data-oss-repository]").length,
-      1,
-    );
-    link.href = "https://github.com/example/renamed";
-    await tick();
-    assert.equal(
-      link.querySelector("[data-oss-repository]").textContent,
-      "example/renamed",
-    );
+    // A native rerender that drops the label gets exactly one back.
     link.querySelector("[data-oss-repository]").remove();
     await tick();
-    assert.equal(
-      window.document.querySelectorAll("[data-oss-repository]").length,
-      1,
-    );
-    assert.equal(
-      link.querySelector("[data-oss-repository]").textContent,
-      "example/renamed",
-    );
+    assert.deepEqual(labels(), [
+      ["https://github.com/example/project/", "example/project"],
+    ]);
+    // A destination that no longer matches the configuration loses its label.
+    link.href = "https://github.com/example/renamed";
+    await tick();
+    assert.deepEqual(labels(), []);
+    link.href = "https://github.com/Example/Project";
+    await tick();
+    assert.deepEqual(labels(), [
+      ["https://github.com/Example/Project", "example/project"],
+    ]);
+    // Reloading without a repository removes labels instead of guessing one.
+    run(null);
+    await tick();
+    assert.deepEqual(labels(), []);
   } finally {
     dom.window.__ossDocsHeaderCleanup?.();
     dom.window.close();

@@ -2,7 +2,13 @@
 (() => {
   // Mintlify can re-run custom scripts during preview updates.
   window.__ossDocsHeaderCleanup?.();
-  const settings = { name: "Example" };
+  const settings = {
+    name: "Example",
+    repository: {
+      href: "https://github.com/avgeek-oss/oss-docs",
+      label: "avgeek-oss/oss-docs",
+    },
+  };
   let scheduled = false;
   let frame;
   window.__ossDocsHeaderCleanup = () => {
@@ -12,20 +18,29 @@
   };
   const observer = new MutationObserver(schedule);
 
+  // Label the native footer GitHub social link with footer.socials.github.
+  const repositoryPath = (href) =>
+    new URL(href).pathname.replace(/\/+$/, "").toLowerCase();
   function enhanceFooterRepository() {
+    const repository = settings.repository;
     for (const link of document.querySelectorAll(
       '#footer a[href^="https://github.com/"]:has(> svg):has(> .sr-only)',
     )) {
-      const repository = new URL(link.href).pathname.split("/").filter(Boolean);
-      if (repository.length !== 2) continue;
       let label = link.querySelector("[data-oss-repository]");
+      if (
+        !repository ||
+        repositoryPath(link.href) !== repositoryPath(repository.href)
+      ) {
+        label?.remove();
+        continue;
+      }
       if (!label) {
         label = document.createElement("span");
         label.dataset.ossRepository = "";
         link.append(label);
       }
-      const name = repository.join("/");
-      if (label.textContent !== name) label.textContent = name;
+      if (label.textContent !== repository.label)
+        label.textContent = repository.label;
     }
   }
 

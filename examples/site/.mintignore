@@ -1,0 +1,4 @@
+# Tooling inputs for mintlify-docs; not documentation pages.
+site.json
+reference-navigation.json
+screenshots.json

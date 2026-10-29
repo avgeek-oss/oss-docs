@@ -27,11 +27,11 @@
   "name": "Example",
   "description": "A sample project for the shared documentation kit.",
   "logo": {
-    "light": "/logo.svg",
-    "dark": "/logo.svg",
+    "light": "/assets/logo.svg",
+    "dark": "/assets/logo.svg",
     "href": "/"
   },
-  "favicon": "/logo.svg",
+  "favicon": "/assets/logo.svg",
   "colors": {
     "primary": "#A16207",
     "light": "#B08505",
@@ -45,7 +45,11 @@
         "groups": [
           {
             "group": "Get started",
-            "pages": ["guide", "reference"]
+            "pages": ["guide"]
+          },
+          {
+            "group": "Reference",
+            "pages": ["reference"]
           }
         ]
       }
@@ -64,7 +68,7 @@
         "header": "Documentation",
         "items": [
           {
-            "label": "Get started",
+            "label": "Get started with v1.0.0",
             "href": "/guide"
           },
           {
